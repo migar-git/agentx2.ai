@@ -1,7 +1,7 @@
 # AgentX2.ai
 
 <p align="center">
-  <img src="docs/logo.jpg" alt="AgentX2.ai" width="220"/>
+  <img src="logo.jpg" alt="AgentX2.ai" width="220"/>
 </p>
 
 <h1 align="center">AgentX2.ai</h1>
