@@ -20,7 +20,7 @@
 - [ ] test
 - [ ] ci / chore
 
-## Quality gates (must all pass — see [Quality Gates](docs/04-quality/QUALITY_GATES.md))
+## Quality gates (must all pass — see [Quality Gates](../docs/04-quality/QUALITY_GATES.md))
 
 - [ ] Lint clean (markdownlint / formatters)
 - [ ] Tests pass; coverage not reduced
@@ -29,7 +29,7 @@
 - [ ] Accessibility (WCAG 2.2 AA) — no new violations
 - [ ] Performance — Core Web Vitals within budget
 - [ ] Security — no secrets; headers/CSP intact; deps clean
-- [ ] Docs updated + linked from [`docs/INDEX.md`](docs/INDEX.md) (≤3 clicks; no orphans)
+- [ ] Docs updated + linked from [`docs/INDEX.md`](../docs/INDEX.md) (≤3 clicks; no orphans)
 - [ ] Frontmatter timestamps updated (`updated`, `last_verified`)
 - [ ] Observability — traces/metrics present where relevant
 - [ ] Governance — HITL respected for risky/irreversible actions

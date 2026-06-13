@@ -2,7 +2,7 @@
 title: "Current State & Gap Analysis"
 doc_id: "DISCOVERY-CURRENT-STATE"
 status: Active
-version: 1.0.0
+version: 2.0.0
 created: 2026-06-12
 updated: 2026-06-12
 last_verified: 2026-06-12
@@ -59,10 +59,20 @@ This pass creates the **documentation and architecture foundation only** (no app
 - Domain docs across overview, architecture, website, agents, quality, observability, governance,
   operations, knowledge, and roadmap (see the [Docs Index](docs/INDEX.md)).
 
-Application code (Astro site, GitHub Actions, Ollama orchestration scripts) is **specified** here and
-**implemented** in a subsequent build pass per the [Roadmap](docs/09-roadmap/ROADMAP.md).
+Application code is now **implemented** (this build, 2026-06-12): a static **Astro** site (18 pages,
+AI-everywhere widgets, Mission Control, ROI calculator, demo), CSS design tokens, privacy-respecting
+telemetry with a circuit breaker, `openapi.yaml`, `.env.example`, **GitHub Actions** CI + Pages deploy,
+and a `node:test` + validation suite — all gates green. Local **Ollama** orchestration scripts and live
+OTel export remain specified for a subsequent pass per the [Roadmap](docs/09-roadmap/ROADMAP.md). See the
+[Build Report](BUILD_REPORT.md).
 
 ## 4. Gap analysis
+
+> **Update (2026-06-12, application build):** the High-severity Pages, Assets, AI-build, Agents,
+> Quality, and Observability gaps below are now **implemented** (static Astro site, design tokens, 18
+> pages with AI widgets, CI gates, tests, telemetry, and Mission Control). See the
+> [Build Report](BUILD_REPORT.md). Remaining items (live Ollama orchestration, OTel export wiring) are
+> tracked in the [Roadmap](docs/09-roadmap/ROADMAP.md).
 
 | Domain | Gap | Severity | Closed by |
 |--------|-----|----------|-----------|

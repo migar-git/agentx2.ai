@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { FAQS } from '../data/content';
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<BaseLayout
+  title="FAQ — Answers About AgentX2.ai"
+  description="Frequently asked questions about AgentX2.ai: how we work, data and safety, models and tools, getting started, and measuring ROI."
+  path="/faq/"
+  schema={faqSchema}
+  agent="Knowledge Agent"
+  mission="Answer questions grounded in our content."
+  aiPage="faq"
+  starters={['Do you use our data?', 'How fast to start?', 'How is ROI measured?', 'Book a consultation']}
+>
+  <PageHero eyebrow="FAQ" title="Questions, answered" crumb="FAQ"
+    lead="Can't find what you need? Ask the Knowledge Agent in the corner, or book a consult.">
+    <a class="btn btn-primary" href="/contact/" data-ax2-event="cta_click" data-ax2-label="faq_consult">Book a consultation</a>
+  </PageHero>
+
+  <section class="container-narrow container section-sm">
+    <div class="accordion">
+      {FAQS.map((f, i) => (
+        <details class="qa" open={i === 0}>
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <CtaBand title="Still curious?" body="Talk to us — we'll answer your specific questions and map a path forward." secondaryLabel="See subscriptions" secondaryHref="/subscriptions/" />
+</BaseLayout>

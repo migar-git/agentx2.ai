@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { NAV } from '../data/site';
+---
+
+<BaseLayout title="Page not found" description="The page you were looking for could not be found." path="/404/" noindex={true}>
+  <section class="container section" style="text-align:center">
+    <p class="eyebrow center">Error 404</p>
+    <h1 style="font-size:var(--fs-800);margin-top:var(--sp-3)">This page wandered off.</h1>
+    <p class="lead center" style="margin-top:var(--sp-3)">The link may be broken or the page moved. Here's the way back.</p>
+    <div class="hero-actions" style="justify-content:center;margin-top:var(--sp-5)">
+      <a class="btn btn-primary btn-lg" href="/">Back to home</a>
+      <a class="btn btn-ghost btn-lg" href="/contact/">Contact us</a>
+    </div>
+    <div class="flex" style="justify-content:center;margin-top:var(--sp-7)">
+      {NAV.map((item) => <a class="tag" href={item.href}>{item.label}</a>)}
+    </div>
+  </section>
+</BaseLayout>

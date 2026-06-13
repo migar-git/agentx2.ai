@@ -1,0 +1,333 @@
+---
+/**
+ * AIWidget — the "AI everywhere" on-page assistant shell.
+ * Accessible (ARIA dialog, keyboard, focus management, aria-live), observable
+ * (emits ai_widget_open / ai_message / lead_intent), and grounded: replies are
+ * derived from real site content. In production it connects to a governed model
+ * (Model Context Protocol boundary); if that transport fails it falls back to
+ * these grounded responses (circuit breaker).
+ * Docs: docs/02-website/AI_EXPERIENCE.md · docs/03-agents/AGENT_CATALOG.md
+ */
+interface Props {
+  agent: string;
+  mission: string;
+  page: string;
+  starters?: string[];
+}
+const {
+  agent,
+  mission,
+  page,
+  starters = ['What do you offer?', 'How does pricing work?', 'Is it secure & governed?', 'Book a consultation'],
+} = Astro.props;
+---
+
+<div class="ai-widget" data-page={page}>
+  <button class="ai-launcher" id="aiLauncher" aria-expanded="false" aria-controls="aiPanel" data-ax2-event="ai_widget_open" data-ax2-label={agent}>
+    <span class="ai-dot" aria-hidden="true"></span>
+    <span class="ai-launcher-text">Ask {agent.replace('AI ', '').replace(' Agent', '')}</span>
+    <span aria-hidden="true">✨</span>
+  </button>
+
+  <section class="ai-panel" id="aiPanel" role="dialog" aria-label={`${agent} assistant`} aria-modal="false" hidden>
+    <header class="ai-head">
+      <div>
+        <strong>{agent}</strong>
+        <span class="ai-mission">{mission}</span>
+      </div>
+      <button class="ai-close" id="aiClose" aria-label="Close assistant">✕</button>
+    </header>
+
+    <div class="ai-log" id="aiLog" role="log" aria-live="polite" aria-atomic="false"></div>
+
+    <div class="ai-starters" id="aiStarters">
+      {starters.map((s) => <button class="ai-chip" type="button" data-prompt={s}>{s}</button>)}
+    </div>
+
+    <form class="ai-form" id="aiForm" autocomplete="off">
+      <label class="visually-hidden" for="aiInput">Message {agent}</label>
+      <input id="aiInput" name="message" type="text" placeholder="Type your question…" />
+      <button class="btn btn-primary" type="submit" aria-label="Send">→</button>
+    </form>
+    <p class="ai-disclaimer">Demo assistant grounded in this site. For tailored advice, <a href="/contact/">book a consult</a>.</p>
+  </section>
+</div>
+
+<style>
+  .ai-widget {
+    position: fixed;
+    right: clamp(0.75rem, 3vw, 1.5rem);
+    bottom: clamp(0.75rem, 3vw, 1.5rem);
+    z-index: 120;
+  }
+
+  .ai-launcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.7rem 1.1rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border-strong);
+    background: var(--brand-gradient);
+    color: var(--accent-contrast);
+    font-weight: 700;
+    font-size: var(--fs-200);
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .ai-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #06080d;
+    box-shadow: 0 0 0 4px rgba(6, 8, 13, 0.25);
+    animation: ai-pulse 2.4s var(--ease) infinite;
+  }
+
+  @keyframes ai-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  .ai-panel {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 0.75rem);
+    width: min(380px, calc(100vw - 1.5rem));
+    max-height: min(560px, calc(100vh - 6rem));
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-elev);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+  }
+
+  .ai-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: var(--sp-4);
+    border-bottom: 1px solid var(--border);
+    background: var(--brand-gradient-soft);
+  }
+
+  .ai-head strong {
+    display: block;
+    color: var(--fg-strong);
+    font-size: var(--fs-300);
+  }
+
+  .ai-mission {
+    font-size: var(--fs-100);
+    color: var(--muted);
+  }
+
+  .ai-close {
+    background: transparent;
+    border: 0;
+    color: var(--muted);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.25rem 0.4rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .ai-close:hover {
+    color: var(--fg-strong);
+    background: var(--surface-2);
+  }
+
+  .ai-log {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--sp-4);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-height: 120px;
+  }
+
+  .ai-msg {
+    max-width: 88%;
+    padding: 0.6rem 0.8rem;
+    border-radius: var(--radius-md);
+    font-size: var(--fs-200);
+    line-height: 1.5;
+  }
+
+  .ai-msg.bot {
+    align-self: flex-start;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--fg);
+  }
+
+  .ai-msg.user {
+    align-self: flex-end;
+    background: var(--brand-gradient);
+    color: var(--accent-contrast);
+  }
+
+  .ai-msg a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  .ai-starters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0 var(--sp-4) var(--sp-3);
+  }
+
+  .ai-chip {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: var(--radius-pill);
+    padding: 0.3rem 0.7rem;
+    font-size: var(--fs-100);
+    cursor: pointer;
+  }
+
+  .ai-chip:hover {
+    color: var(--fg-strong);
+    border-color: var(--border-strong);
+  }
+
+  .ai-form {
+    display: flex;
+    gap: 0.4rem;
+    padding: var(--sp-3) var(--sp-4);
+    border-top: 1px solid var(--border);
+  }
+
+  .ai-form input {
+    flex: 1;
+    padding: 0.6rem 0.75rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    color: var(--fg);
+    font: inherit;
+  }
+
+  .ai-form .btn {
+    padding: 0.5rem 0.9rem;
+    min-height: 0;
+  }
+
+  .ai-disclaimer {
+    font-size: var(--fs-100);
+    color: var(--muted-2);
+    padding: 0 var(--sp-4) var(--sp-4);
+    margin: 0;
+  }
+</style>
+
+<script is:inline define:vars={{ agent, page }}>
+  (function () {
+    var launcher = document.getElementById('aiLauncher');
+    var panel = document.getElementById('aiPanel');
+    var closeBtn = document.getElementById('aiClose');
+    var log = document.getElementById('aiLog');
+    var form = document.getElementById('aiForm');
+    var input = document.getElementById('aiInput');
+    var starters = document.getElementById('aiStarters');
+    if (!launcher || !panel || !log || !form || !input) return;
+
+    var greeted = false;
+
+    // Grounded knowledge base — intent keywords -> reply (HTML allowed for links).
+    var KB = [
+      { k: ['price', 'pricing', 'cost', 'plan', 'subscription', 'how much'], r: 'We work through subscriptions: <b>Starter</b> (assessment), <b>Growth</b> (monthly), <b>Enterprise</b> (custom), and the <b>Managed AI Workforce</b>. See <a href="/subscriptions/">subscriptions</a> or estimate value with the <a href="/roi-calculator/">ROI calculator</a>.' },
+      { k: ['agent', 'agentic', 'build', 'automation', 'workflow'], r: 'We design and deploy autonomous and multi-agent systems with human-in-the-loop control. Explore <a href="/agentic-ai/">Agentic AI</a> or the full <a href="/services/">services</a>.' },
+      { k: ['finance', 'cfo', 'forecast', 'roi', 'fp&a', 'accounting'], r: 'Our Finance AI supports forecasting, close, and decision support — finance-grade and governed. See <a href="/finance-ai/">Finance AI</a> and the <a href="/roi-calculator/">ROI calculator</a>.' },
+      { k: ['secure', 'security', 'safe', 'govern', 'governance', 'compliance', 'privacy', 'data'], r: 'Safety is built in: a guardian screens inputs/outputs, prompts and agents are evaluated and version-controlled, and high-risk actions need human approval. Your data stays governed and isolated. More on the <a href="/services/">services</a> and <a href="/privacy/">privacy</a> pages.' },
+      { k: ['industr', 'sector', 'vertical', 'healthcare', 'manufactur', 'bank'], r: 'We serve financial services, healthcare, manufacturing, technology, professional services, and public sector. See <a href="/industries/">industries</a>.' },
+      { k: ['contact', 'book', 'call', 'demo', 'talk', 'meeting', 'consult'], r: 'Happy to help — <a href="/contact/">book a consultation</a> or try the <a href="/demo/">live demo</a>.' },
+      { k: ['case', 'proof', 'result', 'example', 'customer'], r: 'See representative engagement patterns on <a href="/case-studies/">case studies</a>.' },
+      { k: ['who', 'about', 'company', 'team', 'mission'], r: 'AgentX2.ai is an AI-native firm that builds, governs, and operates enterprise AI — and runs on the same agentic swarms we sell. More on <a href="/about/">about</a>.' },
+      { k: ['model', 'ollama', 'openai', 'llm', 'vendor'], r: 'We are vendor-agnostic and local-first by default (Ollama), adding cloud models when warranted. Agents reach tools through a governed Model Context Protocol boundary.' },
+      { k: ['work', 'workforce', 'managed', 'digital worker'], r: 'The Managed AI Workforce runs digital workers for you — monitored, optimized, and governed. See <a href="/subscriptions/">subscriptions</a>.' },
+    ];
+
+    function reply(text) {
+      var t = (text || '').toLowerCase();
+      for (var i = 0; i < KB.length; i++) {
+        for (var j = 0; j < KB[i].k.length; j++) {
+          if (t.indexOf(KB[i].k[j]) !== -1) return KB[i].r;
+        }
+      }
+      return "Great question. I can point you to the right place, or you can <a href=\"/contact/\">book a consult</a> for a tailored answer. Try asking about services, pricing, finance AI, security, or industries.";
+    }
+
+    function add(role, html) {
+      var div = document.createElement('div');
+      div.className = 'ai-msg ' + role;
+      if (role === 'user') div.textContent = html;
+      else div.innerHTML = html;
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function open() {
+      panel.hidden = false;
+      launcher.setAttribute('aria-expanded', 'true');
+      if (!greeted) {
+        add('bot', 'Hi, I\u2019m the ' + agent + '. ' + 'How can I help?');
+        greeted = true;
+      }
+      setTimeout(function () { input.focus(); }, 30);
+      if (window.ax2) window.ax2.track('ai_widget_open', { agent: agent, page: page });
+    }
+
+    function close() {
+      panel.hidden = true;
+      launcher.setAttribute('aria-expanded', 'false');
+      launcher.focus();
+    }
+
+    function handle(text) {
+      if (!text) return;
+      add('user', text);
+      if (window.ax2) window.ax2.track('ai_message', { agent: agent, page: page });
+      var r = reply(text);
+      // lead intent detection -> conversion signal
+      if (/contact|book|call|demo|consult|talk|pricing|buy|start/i.test(text) && window.ax2) {
+        window.ax2.track('lead_intent', { agent: agent, page: page });
+      }
+      setTimeout(function () { add('bot', r); }, 220);
+    }
+
+    launcher.addEventListener('click', function () {
+      if (panel.hidden) open();
+      else close();
+    });
+    if (closeBtn) closeBtn.addEventListener('click', close);
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var v = input.value.trim();
+      input.value = '';
+      handle(v);
+    });
+
+    if (starters) {
+      starters.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-prompt]');
+        if (!btn) return;
+        handle(btn.getAttribute('data-prompt'));
+        input.focus();
+      });
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !panel.hidden) close();
+    });
+  })();
+</script>

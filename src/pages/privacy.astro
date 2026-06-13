@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { SITE } from '../data/site';
+const updated = '2026-06-12';
+---
+
+<BaseLayout
+  title="Privacy Policy"
+  description="How AgentX2.ai collects, uses, and protects information, and our commitments to data minimization, governance, and security."
+  path="/privacy/"
+  noindex={false}
+>
+  <PageHero eyebrow="Legal" title="Privacy Policy" crumb="Privacy"
+    lead={`Last updated ${updated}. We practice data minimization and keep client data governed and isolated.`}>
+  </PageHero>
+
+  <section class="container-narrow container section-sm prose">
+    <p><strong>Summary:</strong> We collect only what we need, never sell personal data, and do not use client data to train models. This page describes our practices in plain language. It is provided for transparency and is not legal advice.</p>
+
+    <h2>1. Information we collect</h2>
+    <ul>
+      <li><strong>Contact details</strong> you provide (name, work email, company, message) when you request a consultation.</li>
+      <li><strong>Privacy-respecting analytics</strong> about site usage (page views, interactions), which honor Do Not Track and avoid personal identifiers by default.</li>
+    </ul>
+
+    <h2>2. How we use information</h2>
+    <ul>
+      <li>To respond to inquiries and schedule consultations.</li>
+      <li>To improve the website experience and measure conversion.</li>
+      <li>To meet legal, security, and governance obligations.</li>
+    </ul>
+
+    <h2>3. Data minimization & AI</h2>
+    <p>We default to local-first models and strict data classification. Client data stays isolated and is not used to train shared models. Sensitive content is redacted from logs and traces, and high-risk actions require human approval. See our governance approach in the documentation.</p>
+
+    <h2>4. Sharing</h2>
+    <p>We do not sell personal data. We share information only with service providers strictly necessary to operate, under appropriate agreements, or where required by law.</p>
+
+    <h2>5. Security</h2>
+    <p>We apply least-privilege access, secrets management, audit logging, and dependency and secret scanning. No system is perfectly secure, but security is engineered in by default.</p>
+
+    <h2>6. Your choices</h2>
+    <p>You may request access to, correction of, or deletion of your information by contacting <a href={`mailto:${SITE.email}`}>{SITE.email}</a>. You can disable analytics via your browser's Do Not Track setting.</p>
+
+    <h2>7. Changes</h2>
+    <p>We may update this policy; material changes will be reflected by the date above.</p>
+
+    <p class="form-note">Questions about privacy? Email <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+  </section>
+</BaseLayout>

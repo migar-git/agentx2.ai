@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+
+const types = [
+  { icon: '☁️', t: 'Cloud & platform', d: 'Hyperscalers and AI platforms we deploy on.' },
+  { icon: '🧩', t: 'Technology partners', d: 'Model, data, and tooling vendors — integrated, vendor-agnostic.' },
+  { icon: '🤝', t: 'Delivery partners', d: 'SIs and agencies extending our capacity.' },
+  { icon: '🎓', t: 'Ecosystem & research', d: 'Communities advancing responsible, agentic AI.' },
+];
+---
+
+<BaseLayout
+  title="Partners — Build the AI-Native Ecosystem"
+  description="Partner with AgentX2.ai across cloud, technology, delivery, and research to bring governed agentic AI to more organizations."
+  path="/partners/"
+  agent="Website Concierge"
+  mission="Help you explore partnership options."
+  aiPage="partners"
+  starters={['How do partnerships work?', 'Become a delivery partner', 'Technology integration', 'Contact the team']}
+>
+  <PageHero eyebrow="Partners" title="Better together" crumb="Partners"
+    lead="We're vendor-agnostic by design. We partner across cloud, technology, delivery, and research to deliver outcomes faster.">
+    <a class="btn btn-primary" href="/contact/" data-ax2-event="cta_click" data-ax2-label="partners_contact">Become a partner</a>
+  </PageHero>
+
+  <section class="container section-sm">
+    <div class="grid grid-4">
+      {types.map((t) => (
+        <article class="card card-hover">
+          <div class="icon" aria-hidden="true">{t.icon}</div>
+          <h3 style="font-size:var(--fs-400)">{t.t}</h3>
+          <p style="font-size:var(--fs-200)">{t.d}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <CtaBand title="Let's partner" body="Tell us how you'd like to work together and we'll find the right model." primaryLabel="Partner inquiry" secondaryLabel="About us" secondaryHref="/about/" />
+</BaseLayout>

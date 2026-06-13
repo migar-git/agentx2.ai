@@ -1,0 +1,117 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+---
+
+<BaseLayout
+  title="AI ROI Calculator — Estimate Your Upside"
+  description="Estimate the annual hours and cost you could save by automating a workflow with AgentX2.ai. A directional model based on your inputs."
+  path="/roi-calculator/"
+  agent="AI ROI Calculator"
+  mission="Quantify the value of automating a workflow."
+  aiPage="roi-calculator"
+  starters={['How is this calculated?', 'What is a good automation rate?', 'Discuss my numbers', 'Book a consultation']}
+>
+  <PageHero eyebrow="ROI Calculator" title="Estimate your AI upside" crumb="ROI Calculator"
+    lead="A directional estimate of annual hours and cost saved by automating a repetitive workflow. Numbers come only from your inputs — nothing fabricated.">
+  </PageHero>
+
+  <section class="container section-sm">
+    <div class="grid grid-2" style="gap:var(--sp-7);align-items:start">
+      <form class="form card" id="roiForm">
+        <h2 style="font-size:var(--fs-500)">Your workflow</h2>
+        <div class="field">
+          <label for="people">People doing this task</label>
+          <input id="people" name="people" type="number" min="1" max="100000" value="5" inputmode="numeric" />
+        </div>
+        <div class="field">
+          <label for="hours">Hours per person, per week</label>
+          <input id="hours" name="hours" type="number" min="0" max="80" step="0.5" value="8" inputmode="decimal" />
+        </div>
+        <div class="field">
+          <label for="cost">Fully-loaded hourly cost (USD)</label>
+          <input id="cost" name="cost" type="number" min="0" max="2000" step="1" value="55" inputmode="decimal" />
+        </div>
+        <div class="field">
+          <label for="auto">Estimated automation rate: <strong id="autoVal">60%</strong></label>
+          <input id="auto" name="auto" type="range" min="10" max="90" step="5" value="60" />
+        </div>
+        <p class="form-note">Assumes 47 productive weeks/year. Adjust the slider to your confidence level.</p>
+      </form>
+
+      <div class="card" id="roiResult" aria-live="polite">
+        <p class="eyebrow">Estimated annual impact</p>
+        <div class="hero-stats" style="grid-template-columns:repeat(2,1fr);margin-top:var(--sp-3)">
+          <div class="stat">
+            <div class="num" id="hoursOut">—</div>
+            <div class="label">Hours saved / year</div>
+          </div>
+          <div class="stat">
+            <div class="num" id="costOut">—</div>
+            <div class="label">Cost saved / year</div>
+          </div>
+          <div class="stat">
+            <div class="num" id="fteOut">—</div>
+            <div class="label">FTE-equivalent</div>
+          </div>
+          <div class="stat">
+            <div class="num" id="weekOut">—</div>
+            <div class="label">Hours saved / week</div>
+          </div>
+        </div>
+        <a class="btn btn-primary btn-block" href="/contact/" style="margin-top:var(--sp-5)" data-ax2-event="cta_click" data-ax2-label="roi_consult">Turn this into a plan →</a>
+        <p class="form-note" style="margin-top:var(--sp-3)">Directional estimate for planning only. We validate assumptions in a consultation.</p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="Like what you see?" body="We'll pressure-test these assumptions and design a governed path to the savings." primaryLabel="Book a consultation" secondaryLabel="See subscriptions" secondaryHref="/subscriptions/" />
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    var WEEKS = 47;
+    var ids = ['people', 'hours', 'cost', 'auto'];
+    var el = {};
+    ids.forEach(function (i) { el[i] = document.getElementById(i); });
+    var hoursOut = document.getElementById('hoursOut');
+    var costOut = document.getElementById('costOut');
+    var fteOut = document.getElementById('fteOut');
+    var weekOut = document.getElementById('weekOut');
+    var autoVal = document.getElementById('autoVal');
+    if (!el.people) return;
+
+    var fmtN = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
+    var fmtC = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+
+    function num(v, d) { var n = parseFloat(v); return isNaN(n) ? d : n; }
+
+    function calc() {
+      var people = Math.max(0, num(el.people.value, 0));
+      var hours = Math.max(0, num(el.hours.value, 0));
+      var cost = Math.max(0, num(el.cost.value, 0));
+      var auto = Math.min(90, Math.max(0, num(el.auto.value, 0)));
+      autoVal.textContent = auto + '%';
+
+      var weeklyHours = people * hours;
+      var weeklySaved = weeklyHours * (auto / 100);
+      var annualHours = weeklySaved * WEEKS;
+      var annualCost = annualHours * cost;
+      var fte = annualHours / (WEEKS * 40);
+
+      hoursOut.textContent = fmtN.format(annualHours);
+      costOut.textContent = fmtC.format(annualCost);
+      fteOut.textContent = (Math.round(fte * 10) / 10).toString();
+      weekOut.textContent = fmtN.format(weeklySaved);
+    }
+
+    ids.forEach(function (i) {
+      el[i].addEventListener('input', function () {
+        calc();
+        if (window.ax2) window.ax2.track('roi_calc_change', {});
+      });
+    });
+    calc();
+  })();
+</script>

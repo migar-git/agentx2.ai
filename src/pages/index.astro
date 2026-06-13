@@ -1,0 +1,193 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { PILLARS, SERVICES, STATS, PROCESS, WORKFORCE, CASE_STUDIES, VALUES } from '../data/content';
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What does AgentX2.ai do?',
+      acceptedAnswer: { '@type': 'Answer', text: 'We design, deploy, govern, and continuously optimize enterprise AI — agentic AI, automation, data intelligence, and a managed AI workforce delivered as a subscription.' },
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title="AI-Native Consulting & Managed AI Workforce"
+  path="/"
+  schema={faqSchema}
+  agent="AI Consultation Agent"
+  mission="Qualify your needs and help you book a consultation."
+  aiPage="home"
+  starters={['What do you offer?', 'How does pricing work?', 'Is it secure & governed?', 'Book a consultation']}
+>
+  <!-- Hero -->
+  <section class="container hero">
+    <p class="eyebrow">⚡ AI-native consulting · autonomous execution</p>
+    <h1>
+      Make your company <span class="gradient-text">AI-native</span>.<br />
+      Outcomes, not slideware.
+    </h1>
+    <p class="lead">
+      AgentX2.ai designs, deploys, governs, and continuously optimizes enterprise AI systems — agentic AI,
+      automation, data intelligence, and a managed AI workforce — delivered as a subscription and observable end to end.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary btn-lg" href="/contact/" data-ax2-event="cta_click" data-ax2-label="hero_consult">Book a consultation</a>
+      <a class="btn btn-ghost btn-lg" href="/agentic-ai/" data-ax2-event="cta_click" data-ax2-label="hero_agentic">Explore Agentic AI</a>
+    </div>
+
+    <div class="hero-stats">
+      {STATS.map((s) => (
+        <div class="stat">
+          <div class="num">{s.num}</div>
+          <div class="label">{s.label}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Trust strip -->
+  <section class="container">
+    <div class="trust">
+      <span class="text-muted">Built for</span>
+      <span class="tag">Financial Services</span>
+      <span class="tag">Healthcare</span>
+      <span class="tag">Manufacturing</span>
+      <span class="tag">Technology</span>
+      <span class="tag">Professional Services</span>
+      <span class="tag">Public Sector</span>
+    </div>
+  </section>
+
+  <!-- Pillars -->
+  <section class="container section">
+    <div class="section-head">
+      <p class="eyebrow">What we do</p>
+      <h2>Strategy → Build → Operate → Improve</h2>
+      <p class="lead">An end-to-end AI operating model. We don't just advise — we build, run, and improve the systems with you.</p>
+    </div>
+    <div class="grid grid-4">
+      {PILLARS.map((p) => (
+        <article class="card card-hover">
+          <div class="icon" aria-hidden="true">{p.icon}</div>
+          <h3>{p.title}</h3>
+          <p>{p.summary}</p>
+          <a class="card-link" href={p.href}>Learn more →</a>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="container section">
+    <div class="section-head">
+      <p class="eyebrow">Capabilities</p>
+      <h2>A complete AI delivery stack</h2>
+      <p class="lead">Every capability is engineered, evaluated against golden datasets, governed, and fully observable.</p>
+    </div>
+    <div class="grid grid-3">
+      {SERVICES.map((s) => (
+        <article class="card card-hover">
+          <div class="icon" aria-hidden="true">{s.icon}</div>
+          <h3>{s.title}</h3>
+          <p>{s.summary}</p>
+          <ul style="margin-top:var(--sp-3);color:var(--muted);font-size:var(--fs-200)">
+            {s.points.slice(0, 3).map((pt) => <li>{pt}</li>)}
+          </ul>
+          <a class="card-link" href={s.href}>Explore →</a>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="container section">
+    <div class="grid grid-2" style="align-items:center;gap:var(--sp-8)">
+      <div>
+        <p class="eyebrow">How we work</p>
+        <h2>A loop that compounds value</h2>
+        <p class="lead">We operate like the swarms we sell: research, plan, build, validate, observe, and improve — every cycle, fully traced.</p>
+        <div class="hero-actions">
+          <a class="btn btn-ghost" href="/mission-control/" data-ax2-event="cta_click" data-ax2-label="home_missioncontrol">See Mission Control →</a>
+        </div>
+      </div>
+      <div class="steps">
+        {PROCESS.map((step) => (
+          <div class="step">
+            <div class="num" aria-hidden="true"></div>
+            <div>
+              <h3 style="font-size:var(--fs-400)">{step.title}</h3>
+              <p style="font-size:var(--fs-200)">{step.body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Managed AI Workforce -->
+  <section class="container section">
+    <div class="callout">
+      <div class="grid grid-2" style="align-items:center;gap:var(--sp-7)">
+        <div>
+          <p class="eyebrow">Managed AI Workforce™</p>
+          <h2>Digital workers, operated for you</h2>
+          <p class="lead">Deploy a governed fleet of agents across functions — monitored, optimized, and human-supervised.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="/subscriptions/" data-ax2-event="cta_click" data-ax2-label="home_workforce">View subscriptions</a>
+          </div>
+        </div>
+        <div class="grid grid-3" style="gap:var(--sp-3)">
+          {WORKFORCE.slice(0, 9).map((w) => (
+            <div class="card" style="padding:var(--sp-4)">
+              <div aria-hidden="true" style="font-size:1.4rem">{w.icon}</div>
+              <strong style="display:block;margin-top:0.4rem;font-size:var(--fs-200)">{w.name}</strong>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Case studies -->
+  <section class="container section">
+    <div class="section-head between flex">
+      <div>
+        <p class="eyebrow">Proof</p>
+        <h2>Representative outcomes</h2>
+      </div>
+      <a class="btn btn-ghost" href="/case-studies/">All case studies →</a>
+    </div>
+    <div class="grid grid-3">
+      {CASE_STUDIES.map((c) => (
+        <article class="card card-hover">
+          <span class="tag">{c.sector}</span>
+          <h3 style="margin-top:var(--sp-3);font-size:var(--fs-400)">{c.title}</h3>
+          <p style="font-size:var(--fs-200)">{c.outcome}</p>
+          <a class="card-link" href="/case-studies/">Read more →</a>
+        </article>
+      ))}
+    </div>
+    <p class="form-note center" style="margin-top:var(--sp-4)">Illustrative engagement patterns — not named clients.</p>
+  </section>
+
+  <!-- Values -->
+  <section class="container section">
+    <div class="grid grid-4">
+      {VALUES.map((v) => (
+        <div class="card">
+          <div class="icon" aria-hidden="true">{v.icon}</div>
+          <h3 style="font-size:var(--fs-400)">{v.title}</h3>
+          <p style="font-size:var(--fs-200)">{v.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>

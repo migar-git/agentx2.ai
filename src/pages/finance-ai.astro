@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+
+const useCases = [
+  { icon: '🔮', t: 'Forecasting & scenarios', d: 'Driver-based forecasts and scenario analysis grounded in your data.' },
+  { icon: '🧾', t: 'Close & reconciliation', d: 'Copilots that accelerate the monthly close with full audit trails.' },
+  { icon: '📊', t: 'FP&A copilots', d: 'Answer finance questions over governed ledgers and models.' },
+  { icon: '💳', t: 'AP / AR automation', d: 'Invoice and payment workflows — idempotent and observable.' },
+  { icon: '⚖️', t: 'Controls & traceability', d: 'Every action is logged, explainable, and human-approvable.' },
+  { icon: '💡', t: 'Decision support', d: 'Briefings that turn numbers into prioritized decisions.' },
+];
+---
+
+<BaseLayout
+  title="Finance AI — Finance-Grade, Governed Decision Support"
+  description="AI for FP&A, close, forecasting, and decision support — finance-grade, governed, fully traceable, with human-in-the-loop control."
+  path="/finance-ai/"
+  agent="AI CFO Agent"
+  mission="Explore finance AI use-case fit and value."
+  aiPage="finance-ai"
+  starters={['Where can finance AI help?', 'How do controls work?', 'Estimate ROI', 'Book a consultation']}
+>
+  <PageHero eyebrow="Finance AI" title="Finance AI your controllers can trust" crumb="Finance AI"
+    lead="Forecasting, close, and decision support — finance-grade, governed, and fully traceable. Built for accuracy and auditability.">
+    <a class="btn btn-primary" href="/roi-calculator/" data-ax2-event="cta_click" data-ax2-label="finance_roi">Estimate ROI</a>
+    <a class="btn btn-ghost" href="/contact/">Talk to us</a>
+  </PageHero>
+
+  <section class="container section-sm">
+    <div class="grid grid-3">
+      {useCases.map((c) => (
+        <article class="card card-hover">
+          <div class="icon" aria-hidden="true">{c.icon}</div>
+          <h3 style="font-size:var(--fs-400)">{c.t}</h3>
+          <p style="font-size:var(--fs-200)">{c.d}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="callout">
+      <div class="grid grid-2" style="gap:var(--sp-7);align-items:center">
+        <div>
+          <p class="eyebrow">Why finance teams choose us</p>
+          <h2 style="font-size:var(--fs-600)">Accuracy, governance, and audit by design</h2>
+          <ul style="display:grid;gap:0.6rem;margin-top:var(--sp-4);color:var(--fg);font-size:var(--fs-200);list-style:none;padding:0">
+            <li>✓ Grounded in your ledgers — no fabrication</li>
+            <li>✓ Human approval for material actions</li>
+            <li>✓ Full audit trail and traceability</li>
+            <li>✓ Vendor-agnostic, local-first models</li>
+          </ul>
+        </div>
+        <div class="card">
+          <p class="eyebrow">Directional value</p>
+          <h3>Quantify the upside</h3>
+          <p style="font-size:var(--fs-200)">Use the ROI calculator to estimate time saved and cost avoided from automating a finance workflow.</p>
+          <a class="btn btn-primary" href="/roi-calculator/" style="margin-top:var(--sp-4)" data-ax2-event="cta_click" data-ax2-label="finance_roi2">Open ROI calculator</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="Bring AI to finance — safely" body="Start with a finance AI assessment and a governed first use case." />
+</BaseLayout>

@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { SITE } from '../data/site';
+---
+
+<BaseLayout
+  title="Contact — Book a Consultation"
+  description="Book an AI consultation with AgentX2.ai. Tell us your goals and we'll map the highest-ROI opportunities and a sequenced plan."
+  path="/contact/"
+  agent="AI Discovery Agent"
+  mission="Run structured discovery to prepare your consult."
+  aiPage="contact"
+  starters={['What happens on a consult?', 'How should I prepare?', 'What does it cost?', 'Help me describe my goal']}
+>
+  <PageHero eyebrow="Contact" title="Let's map your AI opportunity" crumb="Contact"
+    lead="Share a little context and we'll come prepared. Prefer email? Reach us anytime.">
+  </PageHero>
+
+  <section class="container section-sm">
+    <div class="grid grid-2" style="gap:var(--sp-8);align-items:start">
+      <form class="form card" id="contactForm" novalidate>
+        <h2 style="font-size:var(--fs-500)">Book a consultation</h2>
+        <div class="field">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" required autocomplete="name" />
+        </div>
+        <div class="field">
+          <label for="email">Work email</label>
+          <input id="email" name="email" type="email" required autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="company">Company</label>
+          <input id="company" name="company" type="text" autocomplete="organization" />
+        </div>
+        <div class="field">
+          <label for="interest">What are you exploring?</label>
+          <select id="interest" name="interest">
+            <option value="agentic">Agentic AI</option>
+            <option value="finance">Finance AI</option>
+            <option value="automation">Automation</option>
+            <option value="workforce">Managed AI Workforce</option>
+            <option value="governance">AI governance</option>
+            <option value="other">Something else</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="message">Your goal (one or two lines)</label>
+          <textarea id="message" name="message" rows="4"></textarea>
+        </div>
+        <div class="field" hidden aria-hidden="true">
+          <label for="company_url">Leave this empty</label>
+          <input id="company_url" name="company_url" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+        <button class="btn btn-primary btn-lg" type="submit" data-ax2-event="cta_click" data-ax2-label="contact_submit">Request consultation</button>
+        <p class="form-note" id="formNote" role="status" aria-live="polite"></p>
+      </form>
+
+      <aside class="stack-lg">
+        <div class="card">
+          <p class="eyebrow">Direct</p>
+          <h3 style="font-size:var(--fs-400)">Prefer email?</h3>
+          <p style="font-size:var(--fs-200)">Write to us and we'll reply within one business day.</p>
+          <a class="btn btn-ghost" href={`mailto:${SITE.email}`} style="margin-top:var(--sp-3)" data-ax2-event="cta_click" data-ax2-label="contact_email">{SITE.email}</a>
+        </div>
+        <div class="card">
+          <p class="eyebrow">What to expect</p>
+          <ul style="display:grid;gap:0.55rem;list-style:none;padding:0;font-size:var(--fs-200);color:var(--fg)">
+            <li>✓ A 30-minute discovery conversation</li>
+            <li>✓ A shortlist of high-ROI opportunities</li>
+            <li>✓ A sequenced, governed plan</li>
+            <li>✓ No obligation</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    var form = document.getElementById('contactForm');
+    var note = document.getElementById('formNote');
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var honeypot = form.querySelector('#company_url');
+      if (honeypot && honeypot.value) return; // bot
+      var name = form.querySelector('#name');
+      var email = form.querySelector('#email');
+      if (!name.value.trim() || !email.checkValidity()) {
+        note.textContent = 'Please add your name and a valid work email.';
+        note.style.color = 'var(--warning)';
+        (name.value.trim() ? email : name).focus();
+        return;
+      }
+      if (window.ax2) {
+        window.ax2.track('lead_captured', { interest: (form.querySelector('#interest') || {}).value });
+        window.ax2.track('consultation_booked', {});
+      }
+      note.style.color = 'var(--success)';
+      note.textContent = 'Thanks — request received. We will reply within one business day.';
+      form.reset();
+    });
+  })();
+</script>

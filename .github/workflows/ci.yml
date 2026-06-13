@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: Build, test & quality gates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check (astro check)
+        run: npm run check
+
+      - name: Build static site
+        run: npm run build
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Validate links, orphans & SEO
+        run: npm run validate
+
+      - name: Markdown lint
+        run: npm run lint:md
+
+      - name: Secret scan (best-effort)
+        run: |
+          echo "Scanning for obvious committed secrets..."
+          if git grep -nE '(AKIA[0-9A-Z]{16}|-----BEGIN (RSA|OPENSSH|PRIVATE) KEY-----|sk-[A-Za-z0-9]{32,})' -- . ':!.env.example' ':!**/*.md'; then
+            echo "::error::Potential secret detected"; exit 1;
+          fi
+          echo "No obvious secrets found."
+
+  links-external: # informational placeholder for future external link checks
+    name: Lighthouse / a11y budgets (manual)
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - run: echo "Reserved for Lighthouse CI performance + accessibility budgets."

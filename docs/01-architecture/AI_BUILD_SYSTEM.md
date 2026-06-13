@@ -88,7 +88,7 @@ escalations via [Orchestration](ORCHESTRATION.md).
 
 Code/content agents generate changes using local models
 ([Model Strategy](MODEL_STRATEGY.md)). All generation emits OTel GenAI spans
-([Tracing](TRACING.md)) and a cost record (tokens, tool calls, wall time).
+([Tracing](../05-observability/TRACING.md)) and a cost record (tokens, tool calls, wall time).
 
 ### 3.6 Self-check → multi-eval → zero-regression
 
@@ -123,7 +123,7 @@ closing the loop ([Continuous Improvement](../07-operations/CONTINUOUS_IMPROVEME
 | Models | architecture-swarm | [Model Strategy](MODEL_STRATEGY.md) |
 | Memory + retrieval | knowledge-swarm | [Memory Architecture](MEMORY_ARCHITECTURE.md) |
 | Quality gates | quality-swarm | [Quality Gates](../04-quality/QUALITY_GATES.md) |
-| Tracing | observability-swarm | [Tracing](TRACING.md) |
+| Tracing | observability-swarm | [Tracing](../05-observability/TRACING.md) |
 | Approvals | governance-swarm | [HITL](../06-governance/HUMAN_IN_THE_LOOP.md) |
 
 ## 5. Invariants (must always hold)

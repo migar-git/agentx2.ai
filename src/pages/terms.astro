@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { SITE } from '../data/site';
+const updated = '2026-06-12';
+---
+
+<BaseLayout
+  title="Terms of Service"
+  description="The terms governing your use of the AgentX2.ai website and the basis on which we provide information and services."
+  path="/terms/"
+>
+  <PageHero eyebrow="Legal" title="Terms of Service" crumb="Terms"
+    lead={`Last updated ${updated}. These terms govern your use of this website. They are provided for transparency and are not legal advice.`}>
+  </PageHero>
+
+  <section class="container-narrow container section-sm prose">
+    <h2>1. Acceptance</h2>
+    <p>By accessing this website you agree to these terms. If you do not agree, please do not use the site.</p>
+
+    <h2>2. Use of the site</h2>
+    <ul>
+      <li>Use the site lawfully and do not attempt to disrupt or compromise it.</li>
+      <li>Content is provided for general information about our services.</li>
+      <li>The on-page AI assistant is a demonstration grounded in this site; it does not provide professional, legal, or financial advice.</li>
+    </ul>
+
+    <h2>3. Intellectual property</h2>
+    <p>The AgentX2.ai name, brand, content, and code are owned by AgentX2.ai or its licensors, except where third-party materials are credited. See the repository license for code.</p>
+
+    <h2>4. No warranties</h2>
+    <p>The site is provided "as is" without warranties of any kind. We work to keep information accurate and current but do not guarantee completeness.</p>
+
+    <h2>5. Limitation of liability</h2>
+    <p>To the maximum extent permitted by law, AgentX2.ai is not liable for indirect or consequential damages arising from use of the site.</p>
+
+    <h2>6. Services</h2>
+    <p>Engagements are governed by separate written agreements. Nothing on this site constitutes an offer or binding commitment.</p>
+
+    <h2>7. Changes</h2>
+    <p>We may update these terms; the date above reflects the latest version.</p>
+
+    <p class="form-note">Questions about these terms? Email <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+  </section>
+</BaseLayout>

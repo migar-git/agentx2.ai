@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { PLANS, WORKFORCE } from '../data/content';
+---
+
+<BaseLayout
+  title="Subscriptions — AI as an Ongoing Partnership"
+  description="Subscription tiers from Starter to Enterprise, plus the Managed AI Workforce. Continuous AI value, not one-time projects."
+  path="/subscriptions/"
+  agent="AI ROI Calculator"
+  mission="Quantify the value of automating a workflow."
+  aiPage="subscriptions"
+  starters={['Which plan fits me?', 'What is the AI workforce?', 'Estimate ROI', 'Book a consultation']}
+>
+  <PageHero eyebrow="Subscriptions" title="AI as an ongoing partnership" crumb="Subscriptions"
+    lead="We operate as a continuous AI transformation partner. Pick a tier to start; scale as value compounds.">
+    <a class="btn btn-primary" href="/roi-calculator/" data-ax2-event="cta_click" data-ax2-label="subs_roi">Estimate your ROI</a>
+  </PageHero>
+
+  <section class="container section-sm">
+    <div class="grid grid-4">
+      {PLANS.map((p) => (
+        <article class={`card plan ${p.featured ? 'featured' : ''}`}>
+          {p.featured && <span class="pill" style="position:absolute;top:-12px;right:16px">Most popular</span>}
+          <h3>{p.name}</h3>
+          <div class="price">{p.price} <small>/ {p.cadence}</small></div>
+          <p style="font-size:var(--fs-200)">{p.blurb}</p>
+          <ul>
+            {p.features.map((f) => <li>{f}</li>)}
+          </ul>
+          <a class={`btn ${p.featured ? 'btn-primary' : 'btn-ghost'}`} href={p.href} data-ax2-event="cta_click" data-ax2-label={`plan_${p.id}`}>{p.cta}</a>
+        </article>
+      ))}
+    </div>
+    <p class="form-note center" style="margin-top:var(--sp-4)">Pricing is scoped per engagement. Talk to us for a tailored quote.</p>
+  </section>
+
+  <section class="container section">
+    <div class="callout">
+      <p class="eyebrow">Managed AI Workforce™</p>
+      <h2 style="font-size:var(--fs-600)">What's in the fleet</h2>
+      <div class="grid grid-3" style="margin-top:var(--sp-5)">
+        {WORKFORCE.map((w) => (
+          <div class="card" style="padding:var(--sp-4)">
+            <div aria-hidden="true" style="font-size:1.5rem">{w.icon}</div>
+            <strong style="display:block;margin-top:0.4rem">{w.name}</strong>
+            <p style="font-size:var(--fs-200);margin-top:0.25rem">{w.does}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="Find your starting tier" body="Most teams begin with an assessment, then move to Growth as the first agents reach production." primaryLabel="Talk to us" secondaryLabel="Estimate ROI" />
+</BaseLayout>

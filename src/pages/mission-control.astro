@@ -1,0 +1,414 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+
+/** Build-time sparkline helper (illustrative sample series — clearly demo data). */
+function spark(series: number[]): string {
+  const w = 120;
+  const h = 34;
+  const max = Math.max(...series);
+  const min = Math.min(...series);
+  const range = max - min || 1;
+  return series
+    .map((v, i) => {
+      const x = (i / (series.length - 1)) * w;
+      const y = h - ((v - min) / range) * h;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    })
+    .join(' ');
+}
+
+interface Kpi {
+  label: string;
+  value: string;
+  sub: string;
+  series: number[];
+  tone?: 'ok' | 'warn' | 'down';
+}
+
+const TABS: { id: string; label: string; audience: string; kpis: Kpi[] }[] = [
+  {
+    id: 'exec',
+    label: 'Executive',
+    audience: 'Founder · reprioritize',
+    kpis: [
+      { label: 'MRR', value: '$—', sub: 'connect billing', series: [3, 4, 4, 5, 6, 7, 8], tone: 'ok' },
+      { label: 'Pipeline', value: '—', sub: 'connect CRM', series: [5, 5, 6, 6, 7, 8, 9], tone: 'ok' },
+      { label: 'Active projects', value: '—', sub: 'delivery system', series: [2, 3, 3, 4, 4, 4, 5], tone: 'ok' },
+      { label: 'Agent activity', value: 'live', sub: 'runs / hour', series: [6, 8, 7, 9, 11, 10, 12], tone: 'ok' },
+    ],
+  },
+  {
+    id: 'ops',
+    label: 'Operations',
+    audience: 'Ops · intervene',
+    kpis: [
+      { label: 'Workflows', value: 'running', sub: 'active pipelines', series: [4, 5, 5, 6, 6, 7, 7], tone: 'ok' },
+      { label: 'Incidents', value: '0', sub: 'open', series: [1, 0, 1, 0, 0, 0, 0], tone: 'ok' },
+      { label: 'Error rate', value: 'low', sub: 'within budget', series: [3, 2, 2, 1, 2, 1, 1], tone: 'ok' },
+      { label: 'Task queue', value: 'healthy', sub: 'depth', series: [9, 7, 8, 6, 5, 6, 4], tone: 'ok' },
+    ],
+  },
+  {
+    id: 'ai',
+    label: 'AI',
+    audience: 'Engineering · tune/promote',
+    kpis: [
+      { label: 'Model requests', value: 'live', sub: 'per hour', series: [10, 12, 11, 14, 16, 15, 18], tone: 'ok' },
+      { label: 'Avg latency', value: 'p95', sub: 'within target', series: [8, 7, 7, 6, 6, 5, 5], tone: 'ok' },
+      { label: 'Token cost', value: 'tracked', sub: 'per outcome', series: [6, 6, 5, 5, 4, 4, 4], tone: 'ok' },
+      { label: 'Eval score', value: 'passing', sub: 'vs threshold', series: [7, 7, 8, 8, 8, 9, 9], tone: 'ok' },
+    ],
+  },
+  {
+    id: 'fin',
+    label: 'Financial',
+    audience: 'Founder · invest/cut',
+    kpis: [
+      { label: 'MRR', value: '$—', sub: 'connect billing', series: [3, 4, 4, 5, 6, 7, 8], tone: 'ok' },
+      { label: 'ARR', value: '$—', sub: 'annualized', series: [3, 4, 5, 5, 6, 7, 9], tone: 'ok' },
+      { label: 'Forecast', value: 'driver-based', sub: 'next quarter', series: [5, 6, 6, 7, 7, 8, 9], tone: 'ok' },
+      { label: 'Cash runway', value: 'tracked', sub: 'months', series: [9, 9, 8, 8, 8, 7, 7], tone: 'warn' },
+    ],
+  },
+  {
+    id: 'mkt',
+    label: 'Marketing',
+    audience: 'Content · double-down',
+    kpis: [
+      { label: 'Traffic', value: 'live', sub: 'sessions', series: [4, 5, 6, 6, 8, 9, 11], tone: 'ok' },
+      { label: 'Conversions', value: 'tracked', sub: 'leads', series: [2, 2, 3, 3, 4, 4, 5], tone: 'ok' },
+      { label: 'SEO pages', value: 'growing', sub: 'indexed', series: [5, 6, 7, 8, 9, 10, 12], tone: 'ok' },
+      { label: 'Campaigns', value: 'active', sub: 'running', series: [1, 2, 2, 2, 3, 3, 3], tone: 'ok' },
+    ],
+  },
+  {
+    id: 'build',
+    label: 'Build / Quality',
+    audience: 'Quality · block/fix',
+    kpis: [
+      { label: 'Build health', value: 'green', sub: 'CI gates', series: [8, 8, 9, 9, 9, 10, 10], tone: 'ok' },
+      { label: 'Regressions', value: '0', sub: 'tolerated', series: [1, 0, 0, 0, 0, 0, 0], tone: 'ok' },
+      { label: 'Doc freshness', value: 'fresh', sub: 'within cadence', series: [7, 8, 8, 9, 9, 9, 10], tone: 'ok' },
+      { label: 'MTTR', value: 'low', sub: 'mean time to resolve', series: [6, 5, 5, 4, 4, 3, 3], tone: 'ok' },
+    ],
+  },
+];
+
+const funnel = [
+  { label: 'Visitors', w: 100 },
+  { label: 'Leads', w: 64 },
+  { label: 'Consultations', w: 38 },
+  { label: 'Proposals', w: 22 },
+  { label: 'Won', w: 12 },
+];
+
+const breakers = [
+  { name: 'model.gateway', state: 'closed' },
+  { name: 'mcp.crm', state: 'closed' },
+  { name: 'mcp.email', state: 'closed' },
+  { name: 'telemetry.collector', state: 'closed' },
+  { name: 'analytics.beacon', state: 'half-open' },
+];
+---
+
+<BaseLayout
+  title="Mission Control — The Single Pane of Glass"
+  description="AgentX2.ai Mission Control: executive, operations, AI, financial, marketing, and build dashboards. Decision-first, drill-down to trace."
+  path="/mission-control/"
+  agent="Website Concierge"
+  mission="Explain the dashboards and where data comes from."
+  aiPage="mission-control"
+  starters={['What am I looking at?', 'Where does data come from?', 'How do circuit breakers work?', 'Book a consultation']}
+>
+  <PageHero eyebrow="Mission Control" title="One decision-first pane of glass" crumb="Mission Control"
+    lead="Every tile names the decision it informs and drills down to a trace. Shown below with illustrative demo data; production wires to the live telemetry schema.">
+  </PageHero>
+
+  <section class="container">
+    <div class="callout" role="note" style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap">
+      <span class="pill">Demo data</span>
+      <span class="text-muted" style="font-size:var(--fs-200)">Values are illustrative. In production these bind to OpenTelemetry GenAI traces and product analytics — see the Telemetry Schema and Mission Control docs.</span>
+    </div>
+  </section>
+
+  <section class="container section-sm">
+    <div class="tabs" role="tablist" aria-label="Mission Control dashboards" id="tabs">
+      {TABS.map((t, i) => (
+        <button class="tab" role="tab" id={`tab-${t.id}`} aria-controls={`panel-${t.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? '0' : '-1'}>
+          {t.label}
+        </button>
+      ))}
+    </div>
+
+    {TABS.map((t, i) => (
+      <div class="panel" role="tabpanel" id={`panel-${t.id}`} aria-labelledby={`tab-${t.id}`} hidden={i !== 0}>
+        <p class="text-muted" style="font-size:var(--fs-100);margin-bottom:var(--sp-4)">Audience: {t.audience}</p>
+        <div class="grid grid-4">
+          {t.kpis.map((k) => (
+            <div class="kpi">
+              <div class="kpi-top">
+                <span class="kpi-label">{k.label}</span>
+                <span class={`status-dot ${k.tone}`} aria-hidden="true"></span>
+              </div>
+              <div class="kpi-value">{k.value}</div>
+              <div class="kpi-sub">{k.sub}</div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <polyline points={spark(k.series)} fill="none" stroke="url(#sg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <defs>
+                  <linearGradient id="sg" x1="0" y1="0" x2="120" y2="0">
+                    <stop offset="0" stop-color="#6ea8fe" />
+                    <stop offset="1" stop-color="#8b7bff" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </section>
+
+  <section class="container section-sm">
+    <div class="grid grid-2" style="gap:var(--sp-6);align-items:start">
+      <div class="card">
+        <p class="eyebrow">Lead funnel</p>
+        <h3 style="font-size:var(--fs-400)">Visitor → Won</h3>
+        <div class="funnel">
+          {funnel.map((f) => (
+            <div class="funnel-row">
+              <span class="funnel-label">{f.label}</span>
+              <div class="funnel-bar"><span style={`width:${f.w}%`}></span></div>
+            </div>
+          ))}
+        </div>
+        <p class="form-note">Conversion path tracked by the analytics beacon (docs/TELEMETRY_SCHEMA.md).</p>
+      </div>
+
+      <div class="card">
+        <p class="eyebrow">System health · circuit breakers</p>
+        <h3 style="font-size:var(--fs-400)">Resilience at the boundary</h3>
+        <ul class="breakers">
+          {breakers.map((b) => (
+            <li>
+              <span class="mono">{b.name}</span>
+              <span class={`brk brk-${b.state.replace('-', '')}`}>{b.state}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="form-note">Breakers trip on repeated failures and recover via half-open probes (docs/ALERTING.md).</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="cta-band">
+      <h2>Want this for your business?</h2>
+      <p class="lead center" style="margin-top:var(--sp-3)">We stand up a decision-first control tower wired to your real telemetry.</p>
+      <div class="hero-actions" style="justify-content:center">
+        <a class="btn btn-primary btn-lg" href="/contact/" data-ax2-event="cta_click" data-ax2-label="mc_consult">Book a consultation</a>
+        <a class="btn btn-ghost btn-lg" href="/demo/">See the live demo</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: var(--sp-5);
+  }
+
+  .tab {
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    color: var(--muted);
+    font-weight: 600;
+    font-size: var(--fs-200);
+    padding: 0.6rem 0.9rem;
+    cursor: pointer;
+  }
+
+  .tab[aria-selected='true'] {
+    color: var(--fg-strong);
+    border-bottom-color: var(--accent);
+  }
+
+  .tab:hover {
+    color: var(--fg-strong);
+  }
+
+  .kpi {
+    background: linear-gradient(180deg, var(--surface), var(--bg-elev));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--sp-4);
+  }
+
+  .kpi-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .kpi-label {
+    font-size: var(--fs-100);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted-2);
+    font-weight: 700;
+  }
+
+  .kpi-value {
+    font-size: var(--fs-600);
+    font-weight: 800;
+    color: var(--fg-strong);
+    margin-top: var(--sp-2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .kpi-sub {
+    font-size: var(--fs-100);
+    color: var(--muted);
+  }
+
+  .sparkline {
+    width: 100%;
+    height: 34px;
+    margin-top: var(--sp-3);
+  }
+
+  .status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--success);
+  }
+
+  .status-dot.warn {
+    background: var(--warning);
+  }
+
+  .status-dot.down {
+    background: var(--danger);
+  }
+
+  .funnel {
+    display: grid;
+    gap: 0.6rem;
+    margin: var(--sp-4) 0;
+  }
+
+  .funnel-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 0.6rem;
+    align-items: center;
+  }
+
+  .funnel-label {
+    font-size: var(--fs-200);
+    color: var(--muted);
+  }
+
+  .funnel-bar {
+    background: var(--surface-2);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+    height: 16px;
+  }
+
+  .funnel-bar span {
+    display: block;
+    height: 100%;
+    background: var(--brand-gradient);
+    border-radius: var(--radius-pill);
+  }
+
+  .breakers {
+    list-style: none;
+    padding: 0;
+    margin: var(--sp-4) 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .breakers li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+
+  .mono {
+    font-family: var(--font-mono);
+    font-size: var(--fs-200);
+    color: var(--fg);
+  }
+
+  .brk {
+    font-size: var(--fs-100);
+    font-weight: 700;
+    padding: 0.15rem 0.55rem;
+    border-radius: var(--radius-pill);
+  }
+
+  .brk-closed {
+    background: rgba(61, 220, 151, 0.16);
+    color: var(--success);
+  }
+
+  .brk-halfopen {
+    background: rgba(255, 194, 92, 0.16);
+    color: var(--warning);
+  }
+
+  .brk-open {
+    background: rgba(255, 107, 107, 0.16);
+    color: var(--danger);
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var tablist = document.getElementById('tabs');
+    if (!tablist) return;
+    var tabs = Array.prototype.slice.call(tablist.querySelectorAll('[role="tab"]'));
+
+    function select(tab) {
+      tabs.forEach(function (t) {
+        var selected = t === tab;
+        t.setAttribute('aria-selected', String(selected));
+        t.setAttribute('tabindex', selected ? '0' : '-1');
+        var panel = document.getElementById(t.getAttribute('aria-controls'));
+        if (panel) panel.hidden = !selected;
+      });
+      if (window.ax2) window.ax2.track('dashboard_view', { tab: tab.textContent.trim() });
+    }
+
+    tablist.addEventListener('click', function (e) {
+      var tab = e.target.closest('[role="tab"]');
+      if (tab) select(tab);
+    });
+
+    tablist.addEventListener('keydown', function (e) {
+      var idx = tabs.indexOf(document.activeElement);
+      if (idx === -1) return;
+      var next;
+      if (e.key === 'ArrowRight') next = tabs[(idx + 1) % tabs.length];
+      else if (e.key === 'ArrowLeft') next = tabs[(idx - 1 + tabs.length) % tabs.length];
+      if (next) {
+        e.preventDefault();
+        next.focus();
+        select(next);
+      }
+    });
+  })();
+</script>

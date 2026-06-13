@@ -1,0 +1,94 @@
+---
+/**
+ * Analytics — privacy-respecting, dependency-free telemetry beacon.
+ * Exposes window.ax2.track(event, props) and auto-emits page_view + CTA clicks.
+ * No external network calls unless PUBLIC_ANALYTICS_ENDPOINT is configured.
+ * Includes a client-side circuit breaker. Schema: docs/TELEMETRY_SCHEMA.md
+ */
+const endpoint = import.meta.env.PUBLIC_ANALYTICS_ENDPOINT ?? '';
+const dev = import.meta.env.DEV;
+---
+
+<script is:inline define:vars={{ endpoint, dev }}>
+  (function () {
+    var DNT = navigator.doNotTrack === '1' || window.doNotTrack === '1';
+    var failures = 0;
+    var BREAKER_OPEN = false; // circuit breaker: trips after repeated transport failures
+    var queue = [];
+
+    function meta() {
+      return {
+        ts: new Date().toISOString(),
+        path: location.pathname,
+        ref: document.referrer || null,
+        vw: window.innerWidth,
+      };
+    }
+
+    function send(payload) {
+      if (!endpoint || DNT || BREAKER_OPEN) return; // no transport configured or disabled
+      try {
+        var body = JSON.stringify(payload);
+        if (navigator.sendBeacon) {
+          var ok = navigator.sendBeacon(endpoint, body);
+          if (!ok) throw new Error('beacon-failed');
+        } else {
+          fetch(endpoint, { method: 'POST', body: body, keepalive: true, headers: { 'Content-Type': 'application/json' } }).catch(
+            function () {
+              trip();
+            }
+          );
+        }
+        failures = 0;
+      } catch (e) {
+        trip();
+      }
+    }
+
+    function trip() {
+      failures += 1;
+      if (failures >= 3) {
+        BREAKER_OPEN = true; // stop trying after 3 consecutive failures
+        if (window.console && console.warn) console.warn('[ax2] telemetry circuit breaker open');
+      }
+    }
+
+    function track(event, props) {
+      var record = Object.assign({ event: event }, meta(), props || {});
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push(record);
+      queue.push(record);
+      if (dev && window.console) {
+        console.debug('[ax2]', event, record);
+      }
+      send(record);
+    }
+
+    window.ax2 = {
+      track: track,
+      page: function () {
+        track('page_view', { title: document.title });
+      },
+      get queue() {
+        return queue.slice();
+      },
+      get breakerOpen() {
+        return BREAKER_OPEN;
+      },
+    };
+
+    // Auto page_view
+    if (document.readyState !== 'loading') window.ax2.page();
+    else document.addEventListener('DOMContentLoaded', window.ax2.page);
+
+    // Auto-bind declarative CTA tracking: <a data-ax2-event="cta_click" data-ax2-label="...">
+    document.addEventListener('click', function (e) {
+      var el = e.target && e.target.closest ? e.target.closest('[data-ax2-event]') : null;
+      if (!el) return;
+      track(el.getAttribute('data-ax2-event') || 'click', {
+        label: el.getAttribute('data-ax2-label') || el.textContent.trim().slice(0, 64),
+        href: el.getAttribute('href') || null,
+      });
+    });
+  })();
+</script>

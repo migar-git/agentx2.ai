@@ -1,0 +1,119 @@
+/*
+ * AgentX2.ai — Design Tokens (single source of truth)
+ * Aesthetic: executive · AI-native · finance-grade · enterprise · premium · dark-mode-first.
+ * Docs: docs/02-website/DESIGN_SYSTEM.md · docs/VISUAL_SYSTEM.md
+ * Tokens are CSS custom properties (the canonical design-token implementation).
+ */
+
+:root {
+  /* ----- Color: dark theme (default) ----- */
+  --bg: #080b12;
+  --bg-elev: #0c111b;
+  --surface: #111826;
+  --surface-2: #182133;
+  --surface-3: #1f2a40;
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  --fg: #e9eef9;
+  --fg-strong: #ffffff;
+  --muted: #9babc6;
+  --muted-2: #6f7f9b;
+
+  --accent: #6ea8fe;
+  --accent-press: #4f8ef6;
+  --accent-2: #8b7bff;
+  --accent-contrast: #06080d;
+
+  --success: #3ddc97;
+  --warning: #ffc25c;
+  --danger: #ff6b6b;
+  --info: #4cc9f0;
+
+  --brand-gradient: linear-gradient(135deg, #6ea8fe 0%, #8b7bff 55%, #b08bff 100%);
+  --brand-gradient-soft: linear-gradient(135deg, rgba(110, 168, 254, 0.16), rgba(139, 123, 255, 0.16));
+  --glow: 0 0 0 1px rgba(110, 168, 254, 0.25), 0 12px 40px -12px rgba(110, 168, 254, 0.45);
+
+  /* ----- Typography ----- */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Helvetica, Arial,
+    "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  --fs-100: 0.78rem;
+  --fs-200: 0.875rem;
+  --fs-300: 1rem;
+  --fs-400: 1.125rem;
+  --fs-500: 1.375rem;
+  --fs-600: 1.75rem;
+  --fs-700: 2.25rem;
+  --fs-800: 3rem;
+  --fs-900: clamp(2.6rem, 5.2vw, 4.25rem);
+
+  --lh-tight: 1.12;
+  --lh-snug: 1.3;
+  --lh-normal: 1.6;
+  --tracking-tight: -0.02em;
+
+  /* ----- Spacing (4px base scale) ----- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+  --sp-10: 8rem;
+
+  /* ----- Radius / elevation ----- */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 10px 30px -12px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
+
+  /* ----- Motion ----- */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 140ms;
+  --dur: 240ms;
+  --dur-slow: 420ms;
+
+  /* ----- Layout ----- */
+  --container: 1160px;
+  --container-narrow: 820px;
+  --header-h: 68px;
+
+  color-scheme: dark;
+}
+
+/* ----- Light theme ----- */
+:root[data-theme="light"] {
+  --bg: #f6f8fc;
+  --bg-elev: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f1f5fb;
+  --surface-3: #e7eefa;
+  --border: rgba(12, 20, 38, 0.1);
+  --border-strong: rgba(12, 20, 38, 0.2);
+
+  --fg: #16203a;
+  --fg-strong: #0a1020;
+  --muted: #4a5a78;
+  --muted-2: #6a7894;
+
+  --accent: #2f6bff;
+  --accent-press: #1f55e6;
+  --accent-2: #6b4bff;
+  --accent-contrast: #ffffff;
+
+  --glow: 0 0 0 1px rgba(47, 107, 255, 0.2), 0 16px 40px -16px rgba(47, 107, 255, 0.4);
+  --shadow-sm: 0 1px 2px rgba(12, 20, 38, 0.08);
+  --shadow-md: 0 14px 34px -18px rgba(12, 20, 38, 0.3);
+  --shadow-lg: 0 30px 60px -24px rgba(12, 20, 38, 0.34);
+
+  color-scheme: light;
+}

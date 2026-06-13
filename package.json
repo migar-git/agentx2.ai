@@ -1,0 +1,35 @@
+{
+  "name": "agentx2.ai",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "AgentX2.ai — AI-native consulting firm, managed AI workforce, and enterprise AI platform. Public website + operating-system foundation.",
+  "homepage": "https://agentx2.ai",
+  "license": "SEE LICENSE.md",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "node --test tests/structure.test.mjs tests/build-output.test.mjs",
+    "validate:links": "node scripts/check-links.mjs",
+    "validate:orphans": "node scripts/check-orphans.mjs",
+    "validate:seo": "node scripts/check-seo.mjs",
+    "validate:docs": "node scripts/check-doc-links.mjs",
+    "validate": "node scripts/check-links.mjs && node scripts/check-orphans.mjs && node scripts/check-seo.mjs && node scripts/check-doc-links.mjs",
+    "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#dist\" \"#sysprompt_agentx2.md\"",
+    "gates": "npm run build && npm run test && npm run validate",
+    "ci": "npm run check && npm run build && npm run test && npm run validate && npm run lint:md"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/sitemap": "^3.2.1",
+    "astro": "^5.13.0",
+    "markdownlint-cli2": "^0.18.1",
+    "typescript": "^5.7.3"
+  }
+}

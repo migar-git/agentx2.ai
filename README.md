@@ -30,6 +30,25 @@ observability, tracing, and recorded learning — everything timestamped and fac
 
 ---
 
+## 🧑‍💻 Local development
+
+The public site is a static **[Astro](https://astro.build/)** app — no server required.
+
+```bash
+npm install      # install dependencies
+npm run dev      # dev server at http://localhost:4321
+npm run build    # static build to dist/
+npm run preview  # serve the production build
+npm run ci       # all gates: check + build + test + validate + lint
+```
+
+Quality gates (also enforced in CI): `astro check`, `astro build`, `node:test`, internal
+link/orphan/SEO checks, a markdown doc-link check, and markdownlint. Deployment to GitHub Pages is
+automated in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml). See the
+[Build Report](BUILD_REPORT.md) and [Quality Gates](docs/04-quality/QUALITY_GATES.md).
+
+---
+
 ## �🚀 Overview
 
 AgentX2.ai is an AI-first consulting and implementation firm specializing in the design, deployment, governance, and continuous optimization of enterprise AI systems.

@@ -1,0 +1,27 @@
+---
+/**
+ * PageHero — inner-page hero with breadcrumb (supports ≤3-click + orientation).
+ */
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  crumb: string;
+}
+const { eyebrow, title, lead, crumb } = Astro.props;
+---
+
+<section class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <span aria-current="page">{crumb}</span>
+  </nav>
+</section>
+
+<header class="container section-sm">
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <h1 style="font-size:var(--fs-800);margin-top:var(--sp-3)">{title}</h1>
+  {lead && <p class="lead" style="margin-top:var(--sp-4)">{lead}</p>}
+  <div style="margin-top:var(--sp-5)"><slot /></div>
+</header>

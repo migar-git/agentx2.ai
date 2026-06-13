@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { VALUES, STATS } from '../data/content';
+---
+
+<BaseLayout
+  title="About — The AI-Native Company"
+  description="AgentX2.ai is an AI-native firm that builds, governs, and operates enterprise AI — and runs on the same agentic swarms it sells."
+  path="/about/"
+  agent="Website Concierge"
+  mission="Navigate the site and answer your questions."
+  aiPage="about"
+  starters={['What makes you different?', 'How do you operate?', 'Are you hiring?', 'Book a consultation']}
+>
+  <PageHero eyebrow="About" title="We eat our own dog food" crumb="About"
+    lead="AgentX2.ai is an AI-native consulting and implementation firm. We build, govern, and operate enterprise AI — and we run our own company on the same agentic swarms we sell.">
+    <a class="btn btn-primary" href="/contact/" data-ax2-event="cta_click" data-ax2-label="about_consult">Work with us</a>
+    <a class="btn btn-ghost" href="/careers/">Careers</a>
+  </PageHero>
+
+  <section class="container section-sm">
+    <div class="grid grid-2" style="gap:var(--sp-8);align-items:center">
+      <div class="prose">
+        <h2>Our mission</h2>
+        <p>To make every organization AI-native — reducing operating costs, increasing productivity, accelerating innovation, and improving decision quality through autonomous AI and intelligent automation.</p>
+        <h2>How we're different</h2>
+        <ul>
+          <li>AI-native and outcome-focused, not slideware</li>
+          <li>Subscription partnership, not one-time projects</li>
+          <li>Enterprise-ready: security, compliance, governance</li>
+          <li>Vendor-agnostic and local-first by default</li>
+          <li>Observable end to end — every action is traced</li>
+        </ul>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Operating principles</p>
+        <div class="hero-stats" style="grid-template-columns:repeat(2,1fr);margin-top:var(--sp-4)">
+          {STATS.map((s) => (
+            <div class="stat">
+              <div class="num">{s.num}</div>
+              <div class="label">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="grid grid-4">
+      {VALUES.map((v) => (
+        <div class="card">
+          <div class="icon" aria-hidden="true">{v.icon}</div>
+          <h3 style="font-size:var(--fs-400)">{v.title}</h3>
+          <p style="font-size:var(--fs-200)">{v.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <CtaBand title="Build the AI-native future with us" body="Whether you're a client or a candidate, there's a place for you here." primaryLabel="Book a consultation" secondaryLabel="See open roles" secondaryHref="/careers/" />
+</BaseLayout>

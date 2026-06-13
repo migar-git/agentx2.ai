@@ -1,8 +1,8 @@
 ---
-title: "Build Report — Documentation Foundation"
+title: "Build Report — Application & Platform Build"
 doc_id: "BUILD-REPORT"
 status: Active
-version: 1.0.0
+version: 2.0.0
 created: 2026-06-12
 updated: 2026-06-12
 last_verified: 2026-06-12
@@ -17,20 +17,40 @@ sources:
 related: ["DISCOVERY-CURRENT-STATE", "DOCS-INDEX", "ROADMAP", "KNOWLEDGE-LEARNING-LOG"]
 ---
 
-# Build Report — Documentation Foundation
+# Build Report — Application & Platform Build
 
 > **Breadcrumb:** [Home](README.md) › [Docs Index](docs/INDEX.md) › **Build Report**
-> **Status:** `Active` · **Owner:** `production-ops-brain` · **Run:** `founding-docs-build-2026-06-12`
+> **Status:** `Active` · **Owner:** `production-ops-brain` · **Run:** `app-platform-build-2026-06-12`
 
 ## 1. Summary
 
-This run established the complete **documentation and architecture foundation** for AgentX2.ai as an
-AI-native, self-building company platform. Scope was **markdown documentation only** — application code
-is specified here and implemented next per the [Roadmap](docs/09-roadmap/ROADMAP.md). All artifacts are
-timestamped (UTC 2026-06-12), fact-grounded with cited sources, and governed by the
-[Freshness Policy](docs/07-operations/FRESHNESS_POLICY.md).
+This run implemented the **production-ready application and platform foundation** on top of the existing
+documentation foundation. It delivered a complete static **Astro** website (18 pages) with an AI-everywhere
+widget on every content page, a tabbed **Mission Control** dashboard, an interactive **ROI calculator** and
+**agent demo**, privacy-respecting telemetry with a client-side **circuit breaker**, an **OpenAPI 3.1**
+contract, a documented **`.env.example`**, **CI + GitHub Pages deploy** workflows, a zero-dependency test +
+validation suite, and **22 net-new platform docs** (MCP, key management, telemetry, agent registry, etc.).
+All gates are green. Work was fanned out across parallel documentation sub-agents and a single build lane,
+then verified through three repasses plus a visual browser check.
 
-## 2. Created files (82 markdown files total in repo)
+## 2. What this run created
+
+### 2.1 Application & infrastructure (new this run)
+
+| Area | Files | Location |
+|------|-------|----------|
+| Astro app config | 4 | `package.json`, `astro.config.mjs`, `tsconfig.json`, `.gitignore` |
+| Design system (tokens) | 2 | `src/styles/tokens.css`, `src/styles/global.css` |
+| Components + layout | 7 | `src/components/*.astro`, `src/layouts/BaseLayout.astro` |
+| Site data | 2 | `src/data/site.ts`, `src/data/content.ts` |
+| Pages | 18 | `src/pages/*.astro` (incl. mission-control, roi-calculator, demo, 404) |
+| Public assets | 8 | `public/` (favicon, logo, robots, manifest, CNAME, og, `_headers`) |
+| API + secrets | 2 | `openapi.yaml`, `.env.example` |
+| CI/CD | 2 | `.github/workflows/ci.yml`, `deploy.yml` |
+| Tests + validators | 6 | `tests/*.test.mjs`, `scripts/check-*.mjs` |
+| New platform docs | 22 | `docs/` (MCP×3, Key Mgmt, API arch, Sys context, Agent registry/workflows, Prompt gov, Telemetry, Alerting, Visual, Compliance + 9 front doors) |
+
+### 2.2 Documentation foundation (prior run, still current)
 
 | Area | Count | Location |
 |------|-------|----------|
@@ -59,17 +79,20 @@ timestamped (UTC 2026-06-12), fact-grounded with cited sources, and governed by 
 4. [ADR-0004](docs/08-knowledge/adr/ADR-0004-zero-regression-policy.md) — Zero-regression quality bar.
 5. [ADR-0005](docs/08-knowledge/adr/ADR-0005-agentic-swarm-topology.md) — Parallel agentic-swarm topology.
 
-## 4. Validation results
+## 4. Validation results (all gates green)
 
-| Check | Result |
-|-------|--------|
-| markdownlint (whole workspace) | PASS — 0 errors |
-| File inventory vs. index | PASS — 82 files reconcile exactly |
-| ≤3-click navigation | PASS — every doc linked from [`docs/INDEX.md`](docs/INDEX.md) |
-| Orphans | NONE |
-| Frontmatter (created/updated/last_verified/owner/sources/cadence) | PASS on all `docs/**` + root architecture docs |
-| Grounding (sources + access dates) | PASS — every architecture/standard doc cites ≥1 source |
-| Deep relative links (ADRs) | PASS — verified `../../../` and `../../` targets |
+| Gate | Command | Result |
+|------|---------|--------|
+| Type check | `npm run check` | PASS — 0 errors, 0 warnings, 0 hints (35 files) |
+| Build | `npm run build` | PASS — 18 pages + `sitemap-index.xml` |
+| Unit tests | `npm test` | PASS — 7/7 |
+| Internal links | `scripts/check-links.mjs` | PASS — 928 links, 0 broken |
+| Orphans | `scripts/check-orphans.mjs` | PASS — 0 orphans (17 routes) |
+| SEO + a11y signals | `scripts/check-seo.mjs` | PASS — 18 pages (title, desc, canonical, OG, one H1) |
+| Doc links | `scripts/check-doc-links.mjs` | PASS — 2150 links across 119 docs, 0 broken |
+| Markdown lint | `npm run lint:md` | PASS — 0 errors (122 files) |
+| Secret scan | CI inline | PASS — none found |
+| Visual check | Playwright (home, AI widget, dashboard) | PASS — renders, AI replies, 0 console errors |
 
 ## 5. Assumptions (to verify)
 
@@ -83,23 +106,51 @@ timestamped (UTC 2026-06-12), fact-grounded with cited sources, and governed by 
 See the [Risk Register](docs/06-governance/RISK_REGISTER.md) (R-001…R-007), notably stale model ids
 (30-day cadence) and prompt-injection defense for AI features.
 
-## 7. Future work (next build pass)
+## 7. Repass results & polish
 
-1. Scaffold Astro + Tailwind project (B-001) and GitHub Actions CI with all gates (B-002).
-2. Stand up local Ollama orchestration + multi-eval harness (B-003).
-3. Build Phase-1 pages with AI-everywhere widgets (B-004…B-006).
-4. Wire OTel GenAI tracing + Mission Control (B-008).
-5. Generate the Obsidian vault + Canvas maps (B-009).
+**Three repasses** were completed:
 
-Full list: [Backlog](docs/09-roadmap/BACKLOG.md) · [Milestones](docs/09-roadmap/MILESTONES.md).
+1. **Architecture** — every page, doc, API, MCP, agent, data-flow, and trust boundary is present and
+   cross-linked; the 22 new docs were wired into [`docs/INDEX.md`](docs/INDEX.md).
+2. **Implementation** — files exist, all 18 routes build, links + components + forms + dashboards render;
+   configs and CI are present.
+3. **Operations** — build/tests/validate/lint green; telemetry wired; circuit breakers defined and shown
+   live in Mission Control; secrets protected (`.env.example`, `.gitignore`, CI secret scan); deploy ready.
 
-## 8. Suggested commit
+**Ten polish items** identified; the actionable ones were completed in-run:
 
-```text
-feat(agentx2): autonomous AI-native enterprise platform documentation foundation
+1. Added a markdown **doc-link checker** (`scripts/check-doc-links.mjs`) to the validate gate. ✅
+2. Fixed pre-existing broken doc links (`AI_BUILD_SYSTEM`, `LEARNING_LOG`, PR template). ✅
+3. Fixed `[hidden]` so the AI panel + form honeypot stay hidden (global reset). ✅
+4. Fixed the telemetry inline script (`import.meta` → `define:vars`) — 0 console errors. ✅
+5. Added **security headers** (`public/_headers`) incl. a CSP for supporting hosts. ✅
+6. Normalized `PRD_AgentX2.md` to a single H1; scoped the verbatim prompt out of docs lint. ✅
+7. Hardened the analytics **circuit breaker** (trips after 3 transport failures). ✅
+8. Added `og-default.jpg` + manifest + theme bootstrap (no-flash dark/light). ✅
+9. Accessible AI widget (ARIA dialog, focus management, Escape, keyboard tabs). ✅
+10. Lighthouse/perf budgets + external link checks reserved as a CI job (future hardening).
+
+## 8. How to run locally
+
+```bash
+npm install        # install Astro + dev deps
+npm run dev        # local dev server (http://localhost:4321)
+npm run build      # static build to dist/
+npm run preview    # serve the build
+npm run ci         # check + build + test + validate + lint (all gates)
 ```
 
-## 9. Grounding & Sources
+## 9. Suggested commit
+
+```text
+feat(agentx2): build autonomous AI-native enterprise operating platform
+```
+
+Future work: local Ollama orchestration + multi-eval harness, OTel GenAI tracing wiring, and the
+private operations platform implementing `openapi.yaml`. See
+[Backlog](docs/09-roadmap/BACKLOG.md) · [Milestones](docs/09-roadmap/MILESTONES.md).
+
+## 10. Grounding & Sources
 
 | # | Claim | Source | Accessed |
 |---|-------|--------|----------|

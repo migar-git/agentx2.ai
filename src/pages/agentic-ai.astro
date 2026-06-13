@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+
+const capabilities = [
+  { icon: '🧠', t: 'Plan & reason', d: 'Agents decompose goals, plan steps, and adapt as conditions change.' },
+  { icon: '🛠️', t: 'Use tools', d: 'Governed tool access through a Model Context Protocol boundary with allow-lists.' },
+  { icon: '🤝', t: 'Collaborate', d: 'Multi-agent swarms hand off work with explicit contracts and dependencies.' },
+  { icon: '🧑‍⚖️', t: 'Human-in-the-loop', d: 'High-risk actions pause for approval with a clear decision packet.' },
+  { icon: '🔍', t: 'Observe', d: 'Every step emits OpenTelemetry GenAI traces — fully explainable.' },
+  { icon: '📈', t: 'Improve', d: 'Agents are evaluated against golden datasets and tuned continuously.' },
+];
+const examples = ['Executive assistant', 'Sales development', 'Finance analyst', 'Research analyst', 'Support resolver', 'Compliance reviewer', 'Engineering teammate', 'Operations dispatcher'];
+---
+
+<BaseLayout
+  title="Agentic AI — Autonomous Agents That Execute"
+  description="Design and deploy autonomous, multi-agent systems that plan, reason, use tools, and execute workflows with human-in-the-loop control."
+  path="/agentic-ai/"
+  agent="Agent Builder"
+  mission="Help you scope an agent for your workflow."
+  aiPage="agentic-ai"
+  starters={['Scope an agent for me', 'How do tools work?', 'Is it safe?', 'Book a consultation']}
+>
+  <PageHero eyebrow="Agentic AI" title="Autonomous agents that actually execute" crumb="Agentic AI"
+    lead="Not chatbots — production agents that plan, reason, decide, use tools, and complete real work under governance.">
+    <a class="btn btn-primary" href="/contact/" data-ax2-event="cta_click" data-ax2-label="agentic_consult">Scope an agent</a>
+    <a class="btn btn-ghost" href="/demo/">See the demo</a>
+  </PageHero>
+
+  <section class="container section-sm">
+    <div class="grid grid-3">
+      {capabilities.map((c) => (
+        <article class="card card-hover">
+          <div class="icon" aria-hidden="true">{c.icon}</div>
+          <h3 style="font-size:var(--fs-400)">{c.t}</h3>
+          <p style="font-size:var(--fs-200)">{c.d}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="callout">
+      <p class="eyebrow">Example digital workers</p>
+      <h2 style="font-size:var(--fs-600)">Agents we build</h2>
+      <div class="flex" style="margin-top:var(--sp-4)">
+        {examples.map((e) => <span class="pill">{e}</span>)}
+      </div>
+      <p class="lead" style="margin-top:var(--sp-5)">Every agent ships with a spec, evaluation suite, traces, metrics, escalation paths, and an autonomy tier.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="/agentic-ai/#build" data-ax2-event="cta_click" data-ax2-label="agentic_build">Start a build</a>
+        <a class="btn btn-ghost" href="/roi-calculator/">Estimate ROI</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section" id="build">
+    <div class="grid grid-2" style="gap:var(--sp-8);align-items:center">
+      <div>
+        <p class="eyebrow">Build path</p>
+        <h2>From idea to running agent</h2>
+        <p class="lead">Scope, architect, build, evaluate, deploy, and operate — with governance at every gate.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="num" aria-hidden="true"></div><div><h3 style="font-size:var(--fs-400)">Scope</h3><p style="font-size:var(--fs-200)">Define the job, inputs, outputs, tools, and success metrics.</p></div></div>
+        <div class="step"><div class="num" aria-hidden="true"></div><div><h3 style="font-size:var(--fs-400)">Build & evaluate</h3><p style="font-size:var(--fs-200)">Implement, then test against golden datasets before promotion.</p></div></div>
+        <div class="step"><div class="num" aria-hidden="true"></div><div><h3 style="font-size:var(--fs-400)">Operate</h3><p style="font-size:var(--fs-200)">Run in production with monitoring, guardrails, and human approval.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="Have a workflow in mind?" body="Tell us the job to be done — we'll scope an agent and a path to production." primaryLabel="Scope an agent" />
+</BaseLayout>

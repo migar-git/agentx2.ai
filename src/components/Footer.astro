@@ -1,0 +1,58 @@
+---
+/**
+ * Footer — global footer. Exposes every page so there are no orphans.
+ */
+import { FOOTER, SITE } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <a class="brand" href="/" aria-label={`${SITE.name} home`}>
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true" fill="none">
+            <rect x="1" y="1" width="30" height="30" rx="9" fill="#6ea8fe" />
+            <path d="M9 22 L16 9 L23 22 M11.6 17.4 H20.4" stroke="#06080d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span>AgentX2<span style="color:var(--accent)">.ai</span></span>
+        </a>
+        <p class="text-muted" style="margin-top:1rem;max-width:34ch">{SITE.tagline}</p>
+        <p style="margin-top:1rem">
+          <a href={`mailto:${SITE.email}`} data-ax2-event="cta_click" data-ax2-label="footer_email">{SITE.email}</a>
+        </p>
+      </div>
+
+      {
+        FOOTER.map((group) => (
+          <div class="footer-col">
+            <h4>{group.title}</h4>
+            <ul>
+              {group.links.map((link) => (
+                <li>
+                  <a
+                    href={link.href}
+                    {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="footer-bottom">
+      <span>© {year} {SITE.name}. All rights reserved.</span>
+      <span class="flex">
+        <a href="/mission-control/">Mission Control</a>
+        <span aria-hidden="true">·</span>
+        <a href="/demo/">Live Demo</a>
+        <span aria-hidden="true">·</span>
+        <a href="/sitemap-index.xml">Sitemap</a>
+      </span>
+    </div>
+  </div>
+</footer>

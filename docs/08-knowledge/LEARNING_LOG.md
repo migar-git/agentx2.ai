@@ -56,12 +56,12 @@ one cheaper ([Continuous Improvement](../07-operations/CONTINUOUS_IMPROVEMENT.md
 - **Root cause / insight:** conceptual architecture is necessary but not sufficient for autonomous
   execution; builders need flat, predictable entry points plus concrete, testable specs.
 - **Action taken / rule added:** added 18 canonical entry-point docs (front-doors defer to the deep
-  doc; gap docs are full) + [Documentation Audit](DOCUMENTATION_AUDIT.md); preserved all existing
+  doc; gap docs are full) + [Documentation Audit](../DOCUMENTATION_AUDIT.md); preserved all existing
   links (no restructure).
 - **Generalization:** keep one authoritative deep doc per topic and a thin, predictably-named front
   door; never duplicate — front doors summarize + route.
 - **Confidence:** High · **Decay horizon:** 180d
-- **Supersedes:** none · **Sources:** [Documentation Audit](DOCUMENTATION_AUDIT.md) (accessed 2026-06-12)
+- **Supersedes:** none · **Sources:** [Documentation Audit](../DOCUMENTATION_AUDIT.md) (accessed 2026-06-12)
 
 ### LRN-20260612-05 — Editor replace cannot match some invalid-byte (mojibake) chars
 

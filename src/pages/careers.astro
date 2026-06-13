@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { SITE } from '../data/site';
+
+const roles = [
+  { t: 'Founding AI Engineer', team: 'Engineering', d: 'Design and ship production agents, evals, and integrations.' },
+  { t: 'AI Solutions Architect', team: 'Delivery', d: 'Translate client outcomes into governed, observable AI systems.' },
+  { t: 'AI Governance Lead', team: 'Governance', d: 'Own responsible-AI controls, approvals, and compliance evidence.' },
+  { t: 'Growth & Content Lead', team: 'Marketing', d: 'Run the content factory and SEO engine with AI assistance.' },
+];
+const perks = ['Remote-first', 'AI-native tooling', 'Outcome-driven culture', 'Learning budget', 'Build in the open', 'Ownership & equity'];
+---
+
+<BaseLayout
+  title="Careers — Build the AI-Native Company"
+  description="Join AgentX2.ai. We're a remote-first, AI-native team building, governing, and operating enterprise AI in the open."
+  path="/careers/"
+  agent="Website Concierge"
+  mission="Help you find a role and apply."
+  aiPage="careers"
+  starters={['What roles are open?', 'How do you work?', 'What is the culture?', 'How do I apply?']}
+>
+  <PageHero eyebrow="Careers" title="Help make every company AI-native" crumb="Careers"
+    lead="We're a remote-first, AI-native team. We build in the open, measure outcomes, and operate with the same swarms we sell.">
+    <a class="btn btn-primary" href={`mailto:${SITE.email}?subject=Careers`} data-ax2-event="cta_click" data-ax2-label="careers_apply">Apply now</a>
+  </PageHero>
+
+  <section class="container section-sm">
+    <div class="flex" style="margin-bottom:var(--sp-5)">
+      {perks.map((p) => <span class="pill">{p}</span>)}
+    </div>
+    <div class="stack-lg">
+      {roles.map((r) => (
+        <article class="card between flex">
+          <div>
+            <span class="tag">{r.team}</span>
+            <h3 style="font-size:var(--fs-400);margin-top:var(--sp-2)">{r.t}</h3>
+            <p style="font-size:var(--fs-200)">{r.d}</p>
+          </div>
+          <a class="btn btn-ghost" href={`mailto:${SITE.email}?subject=${encodeURIComponent('Application: ' + r.t)}`} data-ax2-event="cta_click" data-ax2-label="careers_role">Apply →</a>
+        </article>
+      ))}
+    </div>
+    <p class="form-note" style="margin-top:var(--sp-5)">Don't see your role? We always want to meet exceptional people — write to <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+  </section>
+
+  <CtaBand title="Curious about working here?" body="Tell us what you'd want to build. We hire for outcomes and ownership." primaryLabel="Get in touch" secondaryLabel="About us" secondaryHref="/about/" />
+</BaseLayout>

@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { SERVICES, PROCESS } from '../data/content';
+---
+
+<BaseLayout
+  title="Services — AI Strategy, Build, Operate, Improve"
+  description="The full AgentX2.ai service catalog: agentic AI, intelligent automation, finance AI, data intelligence, governance, and a managed AI workforce."
+  path="/services/"
+  agent="AI Solution Advisor"
+  mission="Recommend the right offering for your goals."
+  aiPage="services"
+  starters={['Which service fits my goal?', 'Do you handle governance?', 'How do you integrate?', 'Book a consultation']}
+>
+  <PageHero eyebrow="Services" title="One partner for the whole AI lifecycle" crumb="Services"
+    lead="From strategy to a running, governed AI workforce — engineered, evaluated, and observable end to end.">
+    <a class="btn btn-primary" href="/contact/" data-ax2-event="cta_click" data-ax2-label="services_consult">Book a consultation</a>
+  </PageHero>
+
+  <section class="container section-sm">
+    <div class="grid grid-3">
+      {SERVICES.map((s) => (
+        <article class="card card-hover" id={s.id}>
+          <div class="icon" aria-hidden="true">{s.icon}</div>
+          <h3>{s.title}</h3>
+          <p>{s.summary}</p>
+          <ul style="margin-top:var(--sp-3);color:var(--muted);font-size:var(--fs-200)">
+            {s.points.map((pt) => <li>{pt}</li>)}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="section-head">
+      <p class="eyebrow">Delivery model</p>
+      <h2>How an engagement runs</h2>
+      <p class="lead">A repeatable, governed loop — the same one our internal swarms use to build this company.</p>
+    </div>
+    <div class="steps">
+      {PROCESS.map((step) => (
+        <div class="step">
+          <div class="num" aria-hidden="true"></div>
+          <div>
+            <h3 style="font-size:var(--fs-400)">{step.title}</h3>
+            <p style="font-size:var(--fs-200)">{step.body}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <CtaBand title="Not sure where to start?" body="A focused assessment maps the highest-ROI opportunities and a sequenced plan." />
+</BaseLayout>

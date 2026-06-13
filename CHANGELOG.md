@@ -6,6 +6,38 @@ adheres to [Semantic Versioning 2.0.0](https://semver.org/). All dates are UTC (
 
 ## [Unreleased]
 
+## [1.0.0] — 2026-06-12
+
+### Added
+
+- **Public website (Astro, static)** — 18 pages: home, services, agentic-ai, finance-ai,
+  subscriptions, industries, case-studies, about, contact, faq, partners, careers, privacy, terms,
+  demo, roi-calculator, mission-control, and 404. SEO metadata, Open Graph, `schema.org` JSON-LD,
+  canonical URLs, sitemap, and `robots.txt` on every page; ≤3-click navigation with no orphans.
+- **AI everywhere** — an accessible, observable on-page AI widget (per-page agent persona, grounded
+  replies, keyboard + ARIA) on every content page; interactive **ROI calculator** and **agent demo**.
+- **Mission Control** dashboard — tabbed Executive/Operations/AI/Financial/Marketing/Build views with
+  KPI sparklines, lead funnel, and live circuit-breaker states (illustrative demo data).
+- **Design system** — CSS design tokens (dark-mode-first), global styles, reusable components.
+- **Telemetry** — privacy-respecting analytics beacon (`window.ax2`) with a client-side circuit breaker.
+- **API contract** — `openapi.yaml` (OpenAPI 3.1) for the future private platform; **`.env.example`**.
+- **CI/CD** — `.github/workflows/ci.yml` (check, build, test, validate, lint, secret scan) and
+  `deploy.yml` (GitHub Pages); `public/_headers` security headers.
+- **Tests + validators** — `node:test` suites and zero-dependency link/orphan/SEO/doc-link checkers.
+- **22 platform docs** — MCP architecture/registry/security, key management, API architecture, system
+  context, agent registry/workflows, prompt governance, telemetry schema, alerting, visual system,
+  compliance model, plus 9 flat front-door docs; all wired into [Docs Index](docs/INDEX.md).
+
+### Changed
+
+- Normalized `PRD_AgentX2.md` to a single H1 (chapter headings demoted to H2).
+- Scoped the verbatim `sysprompt_agentx2.md` out of the docs markdown linter (input artifact).
+
+### Fixed
+
+- Repaired pre-existing broken relative doc links in `AI_BUILD_SYSTEM.md`, `LEARNING_LOG.md`, and the
+  PR template.
+
 ## [0.2.0] — 2026-06-12
 
 ### Added

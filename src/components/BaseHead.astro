@@ -1,0 +1,102 @@
+---
+/**
+ * BaseHead — SEO metadata, Open Graph, Twitter cards, canonical URL,
+ * schema.org JSON-LD, favicon, theme bootstrap, and telemetry.
+ * Docs: docs/02-website/SEO_STRATEGY.md · docs/05-observability/ANALYTICS.md
+ */
+import { SITE } from '../data/site';
+import Analytics from './Analytics.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  path?: string;
+  ogType?: string;
+  image?: string;
+  schema?: Record<string, unknown> | Array<Record<string, unknown>>;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = SITE.description,
+  path = '/',
+  ogType = 'website',
+  image = '/og-default.jpg',
+  schema,
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(path, SITE.url).href;
+const imageUrl = new URL(image, SITE.url).href;
+const fullTitle = path === '/' ? `${SITE.name} — AI-Native Consulting & Managed AI Workforce` : `${title} · ${SITE.name}`;
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE.name,
+  url: SITE.url,
+  description: SITE.description,
+  email: SITE.email,
+  foundingDate: String(SITE.founded),
+  logo: new URL('/logo.svg', SITE.url).href,
+  sameAs: SITE.social.map((s) => s.href),
+};
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE.name,
+  url: SITE.url,
+};
+
+const extra = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
+const schemas = [organizationSchema, websiteSchema, ...extra];
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<meta name="theme-color" content="#080b12" />
+<meta name="generator" content={Astro.generator} />
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/favicon.svg" />
+<link rel="manifest" href="/site.webmanifest" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+
+<!-- Open Graph -->
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={imageUrl} />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />
+
+{schemas.map((s) => <script type="application/ld+json" is:inline set:html={JSON.stringify(s)} />)}
+
+<!-- Theme bootstrap: set theme before paint to avoid flash -->
+<script is:inline>
+  (function () {
+    try {
+      var stored = localStorage.getItem('ax2-theme');
+      var prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+      var theme = stored || (prefersLight ? 'light' : 'dark');
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (e) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+</script>
+
+<Analytics />

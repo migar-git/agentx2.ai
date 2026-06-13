@@ -79,6 +79,32 @@ defer to an authoritative deep doc (linked inside).
 | [Risk Register](RISK_REGISTER.md) · [Roadmap](ROADMAP.md) | Risk + plan entry points |
 | [Documentation Audit](DOCUMENTATION_AUDIT.md) | Inventory + completeness scores |
 
+## Platform, MCP, keys & telemetry — flat reference docs
+
+Net-new flat docs for the platform build, plus front doors to canonical deep docs. The live website
+also ships these as interactive pages (`/mission-control/`, `/demo/`, `/roi-calculator/`).
+
+| Doc | Purpose |
+|-----|---------|
+| [System Context](SYSTEM_CONTEXT.md) | C4 context: actors, external systems, trust boundaries |
+| [API Architecture](API_ARCHITECTURE.md) · [openapi.yaml](../openapi.yaml) | API platform + OpenAPI 3.1 contract |
+| [MCP Architecture](MCP_ARCHITECTURE.md) · [MCP Registry](MCP_REGISTRY.md) · [MCP Security](MCP_SECURITY.md) | Model Context Protocol tool boundary |
+| [Key Management](KEY_MANAGEMENT.md) | Secrets/API keys, rotation, `.env.example` mapping |
+| [Agent Registry](AGENT_REGISTRY.md) · [Agent Workflows](AGENT_WORKFLOWS.md) · [Prompt Governance](PROMPT_GOVERNANCE.md) | Agent operating-system reference |
+| [Telemetry Schema](TELEMETRY_SCHEMA.md) · [Alerting](ALERTING.md) | Event/span schema + alerting & circuit breakers |
+| [Visual System](VISUAL_SYSTEM.md) · [Compliance Model](COMPLIANCE_MODEL.md) | Dashboards/visuals + compliance posture |
+
+Flat front doors (single source of truth lives in the linked canonical doc):
+[AGENTS](AGENTS.md) ·
+[AI Governance](AI_GOVERNANCE.md) ·
+[Analytics](ANALYTICS.md) ·
+[SEO Strategy](SEO_STRATEGY.md) ·
+[Content Factory](CONTENT_FACTORY.md) ·
+[Design System](DESIGN_SYSTEM.md) ·
+[Quality Gates](QUALITY_GATES.md) ·
+[Continuous Improvement](CONTINUOUS_IMPROVEMENT.md) ·
+[Mission Control](MISSION_CONTROL.md).
+
 ## 00 · Overview
 
 - [Vision](00-overview/VISION.md) — what AgentX2.ai is and why.

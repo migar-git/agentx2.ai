@@ -1,0 +1,454 @@
+# AgentX2.ai — API contract for the (future) private operations platform.
+# The PUBLIC website is static and ships no API; this spec is the governed contract
+# for the private platform described in docs/API_ARCHITECTURE.md and docs/API_CONTRACTS.md.
+# Validate with any OpenAPI 3.1 tool. No secrets live here.
+openapi: 3.1.0
+info:
+  title: AgentX2.ai Platform API
+  version: 1.0.0
+  description: >-
+    Governed API for leads, consultations, assessments, ROI, agents, and telemetry.
+    Every request is authenticated, validated, rate-limited, idempotent where it mutates,
+    audit-logged, and traced with OpenTelemetry GenAI semantics.
+  contact:
+    name: AgentX2.ai
+    email: hello@agentx2.ai
+    url: https://agentx2.ai
+  license:
+    name: See LICENSE.md
+    url: https://agentx2.ai
+servers:
+  - url: https://api.agentx2.ai/v1
+    description: Production (illustrative)
+  - url: http://localhost:8787/v1
+    description: Local development
+tags:
+  - name: System
+  - name: Leads
+  - name: Consultations
+  - name: Assessments
+  - name: ROI
+  - name: Agents
+  - name: Telemetry
+security:
+  - bearerAuth: []
+paths:
+  /health:
+    get:
+      tags: [System]
+      operationId: getHealth
+      summary: Liveness/readiness probe
+      security: []
+      responses:
+        '200':
+          description: Service healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+  /leads:
+    post:
+      tags: [Leads]
+      operationId: createLead
+      summary: Capture a lead (e.g., from the website contact form)
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeadInput'
+      responses:
+        '201':
+          description: Lead created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lead'
+        '422':
+          $ref: '#/components/responses/Problem'
+        '429':
+          $ref: '#/components/responses/Problem'
+    get:
+      tags: [Leads]
+      operationId: listLeads
+      summary: List leads
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Page of leads
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeadPage'
+  /consultations:
+    post:
+      tags: [Consultations]
+      operationId: bookConsultation
+      summary: Book a consultation
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsultationInput'
+      responses:
+        '201':
+          description: Consultation booked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Consultation'
+        '422':
+          $ref: '#/components/responses/Problem'
+  /assessments:
+    post:
+      tags: [Assessments]
+      operationId: runAssessment
+      summary: Run an AI opportunity/readiness assessment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssessmentInput'
+      responses:
+        '200':
+          description: Assessment result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assessment'
+        '422':
+          $ref: '#/components/responses/Problem'
+  /roi/estimate:
+    post:
+      tags: [ROI]
+      operationId: estimateRoi
+      summary: Estimate ROI from workflow inputs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoiInput'
+      responses:
+        '200':
+          description: ROI estimate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoiResult'
+        '422':
+          $ref: '#/components/responses/Problem'
+  /agents:
+    get:
+      tags: [Agents]
+      operationId: listAgents
+      summary: List registered agents
+      responses:
+        '200':
+          description: Agents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Agent'
+  /agents/{agentId}/runs:
+    post:
+      tags: [Agents]
+      operationId: invokeAgent
+      summary: Invoke an agent (returns a run with a trace id)
+      parameters:
+        - name: agentId
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentRunInput'
+      responses:
+        '202':
+          description: Run accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentRun'
+        '403':
+          $ref: '#/components/responses/Problem'
+        '422':
+          $ref: '#/components/responses/Problem'
+  /telemetry/events:
+    post:
+      tags: [Telemetry]
+      operationId: ingestEvents
+      summary: Ingest analytics/telemetry events (see docs/TELEMETRY_SCHEMA.md)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Event'
+      responses:
+        '202':
+          description: Accepted
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+  parameters:
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: false
+      description: Client-supplied key to make POST retries safe.
+      schema:
+        type: string
+    Limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    Cursor:
+      name: cursor
+      in: query
+      schema:
+        type: string
+  responses:
+    Problem:
+      description: Error (RFC 9457 problem+json)
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  schemas:
+    Health:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded, down]
+        version:
+          type: string
+        time:
+          type: string
+          format: date-time
+    LeadInput:
+      type: object
+      required: [email]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        company:
+          type: string
+        interest:
+          type: string
+          enum: [agentic, finance, automation, workforce, governance, other]
+        message:
+          type: string
+    Lead:
+      allOf:
+        - $ref: '#/components/schemas/LeadInput'
+        - type: object
+          required: [id, createdAt]
+          properties:
+            id:
+              type: string
+            score:
+              type: integer
+              minimum: 0
+              maximum: 100
+            createdAt:
+              type: string
+              format: date-time
+    LeadPage:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Lead'
+        nextCursor:
+          type: string
+          nullable: true
+    ConsultationInput:
+      type: object
+      required: [email]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        topic:
+          type: string
+        preferredTime:
+          type: string
+          format: date-time
+    Consultation:
+      allOf:
+        - $ref: '#/components/schemas/ConsultationInput'
+        - type: object
+          required: [id, status]
+          properties:
+            id:
+              type: string
+            status:
+              type: string
+              enum: [requested, scheduled, completed, cancelled]
+    AssessmentInput:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [opportunity, readiness, automation, roi, workforce]
+        answers:
+          type: object
+          additionalProperties: true
+    Assessment:
+      type: object
+      required: [id, type, score]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        score:
+          type: number
+        recommendations:
+          type: array
+          items:
+            type: string
+    RoiInput:
+      type: object
+      required: [people, hoursPerWeek, hourlyCost, automationRate]
+      properties:
+        people:
+          type: integer
+          minimum: 1
+        hoursPerWeek:
+          type: number
+          minimum: 0
+        hourlyCost:
+          type: number
+          minimum: 0
+        automationRate:
+          type: number
+          minimum: 0
+          maximum: 1
+    RoiResult:
+      type: object
+      required: [annualHoursSaved, annualCostSaved]
+      properties:
+        annualHoursSaved:
+          type: number
+        annualCostSaved:
+          type: number
+        fteEquivalent:
+          type: number
+        assumptions:
+          type: object
+          additionalProperties: true
+    Agent:
+      type: object
+      required: [id, name, autonomyTier]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        mission:
+          type: string
+        autonomyTier:
+          type: integer
+          enum: [1, 2, 3]
+        tools:
+          type: array
+          items:
+            type: string
+    AgentRunInput:
+      type: object
+      required: [input]
+      properties:
+        input:
+          type: string
+        context:
+          type: object
+          additionalProperties: true
+    AgentRun:
+      type: object
+      required: [taskId, status, traceId]
+      properties:
+        taskId:
+          type: string
+        status:
+          type: string
+          enum: [ok, needs_human, failed, running]
+        result:
+          type: object
+          additionalProperties: true
+        evidence:
+          type: array
+          items:
+            type: string
+        traceId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+    Event:
+      type: object
+      required: [event, ts]
+      properties:
+        event:
+          type: string
+        ts:
+          type: string
+          format: date-time
+        path:
+          type: string
+        props:
+          type: object
+          additionalProperties: true
+    Problem:
+      type: object
+      required: [title, status]
+      properties:
+        type:
+          type: string
+          default: about:blank
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string

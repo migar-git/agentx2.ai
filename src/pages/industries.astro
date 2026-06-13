@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { INDUSTRIES } from '../data/content';
+---
+
+<BaseLayout
+  title="Industries — AI Plays for Your Vertical"
+  description="AI solutions tailored to financial services, healthcare, manufacturing, technology, professional services, and the public sector."
+  path="/industries/"
+  agent="Industry Advisor"
+  mission="Recommend AI plays for your vertical."
+  aiPage="industries"
+  starters={['What fits my industry?', 'Show finance use cases', 'Is it compliant?', 'Book a consultation']}
+>
+  <PageHero eyebrow="Industries" title="AI that speaks your industry" crumb="Industries"
+    lead="We bring patterns proven across sectors — with the governance and controls each vertical demands.">
+    <a class="btn btn-primary" href="/contact/" data-ax2-event="cta_click" data-ax2-label="industries_consult">Book a consultation</a>
+  </PageHero>
+
+  <section class="container section-sm">
+    <div class="grid grid-3">
+      {INDUSTRIES.map((ind) => (
+        <article class="card card-hover" id={ind.id}>
+          <div class="icon" aria-hidden="true">{ind.icon}</div>
+          <h3>{ind.name}</h3>
+          <p style="font-size:var(--fs-200)">{ind.summary}</p>
+          <ul style="margin-top:var(--sp-3);color:var(--muted);font-size:var(--fs-200)">
+            {ind.useCases.map((u) => <li>{u}</li>)}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <CtaBand title="Don't see your sector?" body="Our patterns transfer. Tell us your context and we'll map the highest-value AI plays." />
+</BaseLayout>

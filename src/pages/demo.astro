@@ -1,0 +1,211 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+---
+
+<BaseLayout
+  title="Live Demo — Watch an Agent Work"
+  description="A guided, observable simulation of an AgentX2.ai agent: it plans, calls tools through a governed boundary, and returns a result with a trace."
+  path="/demo/"
+  agent="Website Concierge"
+  mission="Guide you through the demo and answer questions."
+  aiPage="demo"
+  starters={['How does this work?', 'Is this a real model?', 'Show governance', 'Book a consultation']}
+>
+  <PageHero eyebrow="Live demo" title="Watch an agent plan, act, and report" crumb="Live Demo"
+    lead="A guided simulation of how our agents operate — plan, call governed tools, and return a result, fully traced. Try the on-page assistant too.">
+  </PageHero>
+
+  <section class="container section-sm">
+    <div class="grid grid-2" style="gap:var(--sp-6);align-items:start">
+      <div class="card">
+        <p class="eyebrow">Run a demo agent</p>
+        <div class="field">
+          <label for="scenario">Choose a scenario</label>
+          <select id="scenario">
+            <option value="lead">Qualify an inbound lead</option>
+            <option value="forecast">Draft a revenue forecast</option>
+            <option value="triage">Triage a support ticket</option>
+          </select>
+        </div>
+        <div class="flex" style="margin-top:var(--sp-3)">
+          <button class="btn btn-primary" id="runBtn" data-ax2-event="demo_run" data-ax2-label="run">▶ Run agent</button>
+          <button class="btn btn-ghost" id="resetBtn">Reset</button>
+        </div>
+        <p class="form-note" style="margin-top:var(--sp-3)">Simulation — deterministic, no external calls. Real deployments connect to governed models and tools.</p>
+      </div>
+
+      <div class="card console" aria-label="Agent trace" role="region">
+        <div class="console-head">
+          <span class="dot ok" aria-hidden="true"></span>
+          <span>agent-trace</span>
+          <span class="trace-id" id="traceId">trace: —</span>
+        </div>
+        <ol class="console-log" id="log" aria-live="polite"></ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="grid grid-3">
+      <div class="card"><div class="icon" aria-hidden="true">🧭</div><h3 style="font-size:var(--fs-400)">Plan</h3><p style="font-size:var(--fs-200)">The agent decomposes the goal into steps before acting.</p></div>
+      <div class="card"><div class="icon" aria-hidden="true">🛠️</div><h3 style="font-size:var(--fs-400)">Govern tools</h3><p style="font-size:var(--fs-200)">Tool calls pass an allow-listed Model Context Protocol boundary.</p></div>
+      <div class="card"><div class="icon" aria-hidden="true">🔍</div><h3 style="font-size:var(--fs-400)">Trace</h3><p style="font-size:var(--fs-200)">Every step emits a span — explainable and auditable.</p></div>
+    </div>
+  </section>
+
+  <CtaBand title="Want this on your workflow?" body="We'll scope an agent, evaluate it, and put it into production under governance." primaryLabel="Book a consultation" secondaryLabel="Explore Agentic AI" secondaryHref="/agentic-ai/" />
+</BaseLayout>
+
+<style>
+  .console {
+    font-family: var(--font-mono);
+    background: #06080d;
+    border-color: var(--border-strong);
+    min-height: 320px;
+  }
+
+  :root[data-theme='light'] .console {
+    background: #0c111b;
+  }
+
+  .console-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--muted);
+    font-size: var(--fs-100);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: var(--sp-3);
+    margin-bottom: var(--sp-3);
+  }
+
+  .console-head .trace-id {
+    margin-left: auto;
+    color: var(--accent);
+  }
+
+  .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--muted-2);
+  }
+
+  .dot.ok {
+    background: var(--success);
+  }
+
+  .console-log {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.4rem;
+    font-size: var(--fs-200);
+  }
+
+  .console-log li {
+    color: var(--fg);
+    opacity: 0;
+    transform: translateY(4px);
+    animation: line-in 0.3s var(--ease) forwards;
+  }
+
+  .console-log li .lbl {
+    color: var(--accent-2);
+  }
+
+  .console-log li.tool .lbl {
+    color: var(--info);
+  }
+
+  .console-log li.ok .lbl {
+    color: var(--success);
+  }
+
+  .console-log li.gate .lbl {
+    color: var(--warning);
+  }
+
+  @keyframes line-in {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var scenarios = {
+      lead: [
+        { c: 'plan', t: 'Plan: qualify lead → enrich → score → route' },
+        { c: 'tool', t: 'tool(crm.lookup) → contact found: ACME Corp' },
+        { c: 'tool', t: 'tool(enrich.company) → 1,200 employees · FinServ' },
+        { c: 'plan', t: 'Reason: fit = high (regulated, finance AI need)' },
+        { c: 'gate', t: 'HITL gate: route to human AE for outreach ✓ approved' },
+        { c: 'ok', t: 'Result: lead scored 86/100, routed. status=ok' },
+      ],
+      forecast: [
+        { c: 'plan', t: 'Plan: load actuals → model drivers → project → review' },
+        { c: 'tool', t: 'tool(finance.ledger) → 24 months actuals loaded' },
+        { c: 'tool', t: 'tool(model.forecast) → driver-based projection built' },
+        { c: 'plan', t: 'Reason: flag 2 assumptions for human review' },
+        { c: 'gate', t: 'HITL gate: controller approves assumptions ✓' },
+        { c: 'ok', t: 'Result: 4-quarter forecast drafted. status=ok' },
+      ],
+      triage: [
+        { c: 'plan', t: 'Plan: classify → retrieve → answer → escalate?' },
+        { c: 'tool', t: 'tool(kb.search) → 3 grounded articles retrieved' },
+        { c: 'plan', t: 'Guardian: input + output screened ✓ safe' },
+        { c: 'tool', t: 'tool(ticket.update) → drafted grounded reply' },
+        { c: 'gate', t: 'Policy: refund > limit → escalate to human ✓' },
+        { c: 'ok', t: 'Result: reply drafted, escalation opened. status=ok' },
+      ],
+    };
+
+    var log = document.getElementById('log');
+    var runBtn = document.getElementById('runBtn');
+    var resetBtn = document.getElementById('resetBtn');
+    var scenario = document.getElementById('scenario');
+    var traceId = document.getElementById('traceId');
+    var timers = [];
+
+    function clear() {
+      timers.forEach(clearTimeout);
+      timers = [];
+      log.innerHTML = '';
+    }
+
+    function rid() {
+      var s = '';
+      for (var i = 0; i < 16; i++) s += '0123456789abcdef'[Math.floor(Math.random() * 16)];
+      return s;
+    }
+
+    function run() {
+      clear();
+      var key = scenario.value;
+      var steps = scenarios[key] || scenarios.lead;
+      traceId.textContent = 'trace: ' + rid();
+      runBtn.disabled = true;
+      steps.forEach(function (step, i) {
+        timers.push(
+          setTimeout(function () {
+            var li = document.createElement('li');
+            li.className = step.c;
+            li.innerHTML = '<span class="lbl">▸</span> ' + step.t;
+            log.appendChild(li);
+            if (i === steps.length - 1) runBtn.disabled = false;
+          }, 420 * (i + 1))
+        );
+      });
+      if (window.ax2) window.ax2.track('demo_run', { scenario: key });
+    }
+
+    if (runBtn) runBtn.addEventListener('click', run);
+    if (resetBtn) resetBtn.addEventListener('click', function () { clear(); traceId.textContent = 'trace: —'; runBtn.disabled = false; });
+  })();
+</script>

@@ -1,0 +1,32 @@
+---
+/**
+ * CtaBand — closing conversion band used across pages. No dead ends.
+ */
+interface Props {
+  title?: string;
+  body?: string;
+  primaryLabel?: string;
+  primaryHref?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+}
+const {
+  title = 'Ready to become AI-native?',
+  body = 'Start with a focused assessment. We will map the highest-ROI opportunities and a sequenced plan.',
+  primaryLabel = 'Book a consultation',
+  primaryHref = '/contact/',
+  secondaryLabel = 'Estimate ROI',
+  secondaryHref = '/roi-calculator/',
+} = Astro.props;
+---
+
+<section class="container section">
+  <div class="cta-band">
+    <h2>{title}</h2>
+    <p class="lead center" style="margin-top:var(--sp-3)">{body}</p>
+    <div class="hero-actions" style="justify-content:center">
+      <a class="btn btn-primary btn-lg" href={primaryHref} data-ax2-event="cta_click" data-ax2-label="ctaband_primary">{primaryLabel}</a>
+      <a class="btn btn-ghost btn-lg" href={secondaryHref} data-ax2-event="cta_click" data-ax2-label="ctaband_secondary">{secondaryLabel}</a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { CASE_STUDIES } from '../data/content';
+---
+
+<BaseLayout
+  title="Case Studies — Representative Outcomes"
+  description="Representative AI engagement patterns across financial services, technology, and manufacturing — challenge, approach, and outcome."
+  path="/case-studies/"
+  agent="Case Study Agent"
+  mission="Answer questions about our representative work."
+  aiPage="case-studies"
+  starters={['Show a finance example', 'How do you measure outcomes?', 'What about my sector?', 'Book a consultation']}
+>
+  <PageHero eyebrow="Case studies" title="Representative outcomes" crumb="Case Studies"
+    lead="Illustrative engagement patterns — anonymized archetypes, not named clients. Outcomes are described qualitatively and verified by evaluation in real engagements.">
+    <a class="btn btn-primary" href="/contact/" data-ax2-event="cta_click" data-ax2-label="cases_consult">Discuss your use case</a>
+  </PageHero>
+
+  <section class="container section-sm">
+    <div class="stack-lg">
+      {CASE_STUDIES.map((c) => (
+        <article class="card" id={c.id}>
+          <span class="tag">{c.sector}</span>
+          <h2 style="font-size:var(--fs-500);margin-top:var(--sp-3)">{c.title}</h2>
+          <div class="grid grid-3" style="margin-top:var(--sp-4)">
+            <div>
+              <h3 style="font-size:var(--fs-200);color:var(--accent)">Challenge</h3>
+              <p style="font-size:var(--fs-200)">{c.challenge}</p>
+            </div>
+            <div>
+              <h3 style="font-size:var(--fs-200);color:var(--accent)">Approach</h3>
+              <p style="font-size:var(--fs-200)">{c.approach}</p>
+            </div>
+            <div>
+              <h3 style="font-size:var(--fs-200);color:var(--accent)">Outcome</h3>
+              <p style="font-size:var(--fs-200)">{c.outcome}</p>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+    <p class="form-note center" style="margin-top:var(--sp-5)">Outcomes are illustrative of engagement patterns; we never publish fabricated metrics or client data.</p>
+  </section>
+
+  <CtaBand title="Want results like these?" body="Bring your hardest workflow. We'll scope an agent, evaluate it, and put it into production." />
+</BaseLayout>
