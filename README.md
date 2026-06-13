@@ -16,7 +16,21 @@
 
 ---
 
-## 🚀 Overview
+## � Documentation & Architecture
+
+This repository is an **AI-native, self-building company platform**: local Ollama models, working as
+parallel agentic swarms, take it from topic chaos to zero-regression production with full evaluation,
+observability, tracing, and recorded learning — everything timestamped and fact-grounded.
+
+- 📖 **[Documentation Index](docs/INDEX.md)** — the hub for everything (≤3 clicks to any doc).
+- 🤖 **[AGENTS.md](AGENTS.md)** — the agent operating contract.
+- 🏗️ **[AI Build System](docs/01-architecture/AI_BUILD_SYSTEM.md)** — how the repo builds itself.
+- 🧭 **[Current State](CURRENT_STATE.md)** — baseline + gap analysis.
+- 🗺️ **[Roadmap](docs/09-roadmap/ROADMAP.md)** · 🧠 **[Model Strategy](docs/01-architecture/MODEL_STRATEGY.md)** · 🛡️ **[AI Governance](docs/06-governance/AI_GOVERNANCE.md)** · 📈 **[Observability](docs/05-observability/OBSERVABILITY.md)**
+
+---
+
+## �🚀 Overview
 
 AgentX2.ai is an AI-first consulting and implementation firm specializing in the design, deployment, governance, and continuous optimization of enterprise AI systems.
 
@@ -42,7 +56,7 @@ We help businesses:
 
 ---
 
-# What We Do
+## What We Do
 
 ## 🤖 Agentic AI
 
@@ -229,7 +243,7 @@ Transform data into actionable intelligence.
 
 ---
 
-# Industries
+## Industries
 
 ## Financial Services
 
@@ -270,7 +284,7 @@ Transform data into actionable intelligence.
 
 ---
 
-# Subscription Plans
+## Subscription Plans
 
 ## Starter
 
@@ -332,7 +346,7 @@ Your digital workforce as a service.
 
 ---
 
-# Delivery Framework
+## Delivery Framework
 
 ```mermaid
 flowchart LR
@@ -348,7 +362,7 @@ G --> H[Scale]
 
 ---
 
-# Why AgentX2.ai
+## Why AgentX2.ai
 
 ### AI-Native
 
@@ -376,7 +390,7 @@ Strategy → Architecture → Implementation → Operations
 
 ---
 
-# Technology Partners
+## Technology Partners
 
 ### AI Platforms
 
@@ -407,7 +421,7 @@ Strategy → Architecture → Implementation → Operations
 
 ---
 
-# Success Metrics
+## Success Metrics
 
 We focus on measurable outcomes.
 
@@ -423,7 +437,7 @@ Typical client objectives:
 
 ---
 
-# Our Process
+## Our Process
 
 ### 1. AI Readiness Assessment
 
@@ -451,7 +465,7 @@ Improve performance, adoption, and outcomes.
 
 ---
 
-# Contact
+## Contact
 
 ## AgentX2.ai
 
@@ -468,6 +482,15 @@ Improve performance, adoption, and outcomes.
 ## Tagline
 
 > "From AI Strategy to Autonomous Execution."
+
+---
+
+## 🔎 Build provenance
+
+- This repository's documentation foundation was generated on **2026-06-12 (UTC)** and is governed by
+  the [Freshness Policy](docs/07-operations/FRESHNESS_POLICY.md) — every doc is timestamped, sourced,
+  and kept fresh. See the [Build Report](BUILD_REPORT.md) and [Changelog](CHANGELOG.md).
+- Contribute via [Contributing](CONTRIBUTING.md) · responsible disclosure via [Security](SECURITY.md).
 
 ---
 

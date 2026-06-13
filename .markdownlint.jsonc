@@ -1,0 +1,31 @@
+{
+  // AgentX2.ai documentation lint policy.
+  // Grounded in markdownlint rule reference: https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md (accessed 2026-06-12)
+  // Rationale for each disabled/relaxed rule is inline so the policy is self-documenting.
+  "default": true,
+
+  // Long lines are expected in docs (URLs, tables, prose). Prose width is a style choice, not a defect.
+  "MD013": false,
+
+  // We intentionally reuse sub-headings (e.g. "Includes", "Inputs") under different parents.
+  "MD024": { "siblings_only": true },
+
+  // Each doc carries a YAML front matter `title:` AND a single body H1. Tell MD025 not to treat
+  // the front-matter title as the document title so the body H1 is not flagged as a duplicate.
+  "MD025": { "front_matter_title": "" },
+
+  // Inline HTML is permitted for docs ergonomics (<details>, <br>, <sub>, <kbd>, mermaid wrappers).
+  "MD033": false,
+
+  // Bare URLs appear in citation/source tables on purpose.
+  "MD034": false,
+
+  // We use bold lead-ins (e.g. **In scope:**) as labelled callouts, not as headings.
+  "MD036": false,
+
+  // Front matter precedes the H1, so "first line must be a heading" does not apply.
+  "MD041": false,
+
+  // Table column alignment is not enforced — content correctness over pixel-aligned pipes.
+  "MD060": false
+}
