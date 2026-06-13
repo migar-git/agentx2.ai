@@ -6,6 +6,39 @@ adheres to [Semantic Versioning 2.0.0](https://semver.org/). All dates are UTC (
 
 ## [Unreleased]
 
+### Security
+
+- **Upgraded Astro 5.18.2 → 6.4.6** and `@astrojs/sitemap` → 3.7.3, resolving HIGH-severity advisories
+  in the build toolchain (Astro `define:vars` `</script>` XSS [GHSA-j687-52p2-xcff] and server-island
+  replay [GHSA-xr5h-phrj-8vxv]). Production dependencies remain at **0 vulnerabilities**
+  (`npm audit --omit=dev`). Validated end-to-end against the full quality gate. See
+  [Security Review](docs/reviews/security-review.md).
+- **Added a dependency-audit CI gate** — `npm run audit:prod`
+  (`npm audit --omit=dev --audit-level=high`) now runs in CI so vulnerable runtime dependencies cannot
+  regress silently; added a convenience `npm run audit` script for local visibility.
+- **Added a scheduled security workflow** (`.github/workflows/security.yml`) — weekly + on-demand
+  production dependency audit and a full-tree secret scan, to catch newly-disclosed CVEs in unchanged
+  code.
+- **Added Dependabot** (`.github/dependabot.yml`) — grouped weekly update PRs for npm and GitHub
+  Actions, feeding the audit gate.
+- **Added a pre-commit secret-scan hook** (`.githooks/pre-commit`, auto-wired by `scripts/setup-hooks.mjs`
+  via the `prepare` script) that blocks obvious committed secrets locally before they reach CI.
+
+### Changed
+
+- **Bumped the supported Node runtime to ≥ 22.12** in `package.json` `engines` and in both
+  `ci.yml` and `deploy.yml` (Node 20 reached end-of-life; Astro 6 requires Node ≥ 22.12).
+- **Added npm scripts** `security`, `release-check`, `lint:md:fix`, and `prepare`; added a narrow
+  `.gitattributes` enforcing LF on shell hooks.
+
+### Added
+
+- **Repository audit artifacts** (2026-06-13) — [Repository Analysis](docs/reviews/repository-analysis.md),
+  [Gap Analysis](docs/reviews/gap-analysis.md), [Security Review](docs/reviews/security-review.md), the
+  [Master Build Plan](docs/plans/master-build-plan.md), [Rollback Plan](docs/plans/rollback-plan.md),
+  the [Release Readiness Report](docs/releases/release-readiness-report.md), and
+  [Release Notes](docs/releases/release-notes.md); all linked from [Docs Index](docs/INDEX.md).
+
 ## [1.0.0] — 2026-06-12
 
 ### Added

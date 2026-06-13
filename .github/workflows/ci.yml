@@ -25,7 +25,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
@@ -45,6 +45,9 @@ jobs:
 
       - name: Markdown lint
         run: npm run lint:md
+
+      - name: Dependency audit (production deps must be clean)
+        run: npm run audit:prod
 
       - name: Secret scan (best-effort)
         run: |

@@ -1,0 +1,64 @@
+# Security — scheduled + on-demand supply-chain checks.
+# Complements ci.yml (which gates every push/PR) by catching newly-disclosed CVEs in
+# otherwise-unchanged code, and by re-scanning the full git tree for committed secrets.
+# Docs: docs/reviews/security-review.md - docs/plans/master-build-plan.md
+name: Security
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - package.json
+      - package-lock.json
+      - .github/workflows/security.yml
+      - .github/dependabot.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dependency-audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit production dependencies (gating)
+        run: npm run audit:prod
+
+      - name: Audit all dependencies (informational)
+        run: npm audit || true
+
+  secret-scan:
+    name: Secret scan (full tree)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Scan tracked files for obvious secrets
+        run: |
+          echo "Scanning tracked files for obvious committed secrets..."
+          if git grep -nE '(AKIA[0-9A-Z]{16}|-----BEGIN (RSA|OPENSSH|PRIVATE) KEY-----|sk-[A-Za-z0-9]{32,})' -- . ':!.env.example' ':!**/*.md'; then
+            echo "::error::Potential secret detected"; exit 1;
+          fi
+          echo "No obvious secrets found."

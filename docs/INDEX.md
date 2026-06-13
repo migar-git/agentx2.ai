@@ -4,8 +4,8 @@ doc_id: "DOCS-INDEX"
 status: Active
 version: 1.0.0
 created: 2026-06-12
-updated: 2026-06-12
-last_verified: 2026-06-12
+updated: 2026-06-13
+last_verified: 2026-06-13
 owner: "production-ops-brain"
 review_cadence: 14d
 staleness_threshold: 30d
@@ -197,6 +197,18 @@ Flat front doors (single source of truth lives in the linked canonical doc):
 - [Backlog](09-roadmap/BACKLOG.md) — prioritized work.
 - [Milestones](09-roadmap/MILESTONES.md) — dated targets.
 
+## Audit & reviews
+
+Evidence-based audit artifacts from the repository review of 2026-06-13.
+
+- [Repository Analysis](reviews/repository-analysis.md) — what the repository is today + verification snapshot.
+- [Gap Analysis](reviews/gap-analysis.md) — capability matrix, gap detail, and remediation status.
+- [Security Review](reviews/security-review.md) — dependency audit, in-context risk, and fixes.
+- [Master Build Plan](plans/master-build-plan.md) — swarm-to-reality mapping + build/deferral record.
+- [Rollback Plan](plans/rollback-plan.md) — how to reverse the audit + hardening changeset.
+- [Release Readiness Report](releases/release-readiness-report.md) — GO/NO-GO certification.
+- [Release Notes](releases/release-notes.md) — human-readable notes for the unreleased changeset.
+
 ## Templates
 
 - [DOC_TEMPLATE](_templates/DOC_TEMPLATE.md) · [AGENT_SPEC_TEMPLATE](_templates/AGENT_SPEC_TEMPLATE.md) · [ADR_TEMPLATE](_templates/ADR_TEMPLATE.md) · [LEARNING_ENTRY_TEMPLATE](_templates/LEARNING_ENTRY_TEMPLATE.md)
@@ -210,8 +222,8 @@ Flat front doors (single source of truth lives in the linked canonical doc):
 
 ### Freshness
 
-- **Created:** 2026-06-12 · **Updated:** 2026-06-12 · **Last verified:** 2026-06-12
-- **Review cadence:** 14 days · **Staleness threshold:** 30 days · **Next review due:** 2026-06-26
+- **Created:** 2026-06-12 · **Updated:** 2026-06-13 · **Last verified:** 2026-06-13
+- **Review cadence:** 14 days · **Staleness threshold:** 30 days · **Next review due:** 2026-06-27
 - Governed by the [Freshness Policy](07-operations/FRESHNESS_POLICY.md).
 
 ### Navigation

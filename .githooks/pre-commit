@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+# AgentX2.ai pre-commit hook - block obvious secrets before they ever leave the machine.
+# Wired automatically by `npm install` (scripts/setup-hooks.mjs sets core.hooksPath=.githooks).
+# Mirrors the CI secret-scan patterns in .github/workflows/ci.yml.
+# Bypass a single commit with: git commit --no-verify
+# Disable entirely with:      git config --unset core.hooksPath
+
+PATTERN='(AKIA[0-9A-Z]{16}|-----BEGIN (RSA|OPENSSH|PRIVATE) KEY-----|sk-[A-Za-z0-9]{32,})'
+
+if git grep -nE --cached "$PATTERN" -- . ':!.env.example' ':!**/*.md' >/dev/null 2>&1; then
+  echo "x pre-commit: potential secret detected in staged changes - commit blocked." >&2
+  git grep -nE --cached "$PATTERN" -- . ':!.env.example' ':!**/*.md' >&2
+  echo "  Move the value into .env (gitignored) or remove it, then re-commit." >&2
+  echo "  To bypass intentionally: git commit --no-verify" >&2
+  exit 1
+fi
+
+exit 0
