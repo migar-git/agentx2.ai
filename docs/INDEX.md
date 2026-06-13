@@ -59,6 +59,26 @@ graph TD
     KN --> LEARN[Learning Log]
 ```
 
+## Build & delivery — canonical entry points
+
+The flat, predictably-named docs an autonomous builder reads first. Several are **front doors** that
+defer to an authoritative deep doc (linked inside).
+
+| Doc | Purpose |
+|-----|---------|
+| [PRD](PRD.md) | Structured requirements (FR/NFR), goals, metrics, personas |
+| [Architecture](ARCHITECTURE.md) | Canonical architecture overview |
+| [Autonomous Build Plan](AUTONOMOUS_BUILD_PLAN.md) | Ordered, executable build sequence + DoD |
+| [Implementation Plan](IMPLEMENTATION_PLAN.md) | Task WBS + dependency graph |
+| [Agent Orchestration](AGENT_ORCHESTRATION.md) | Orchestration + event flow |
+| [API Contracts](API_CONTRACTS.md) | Interfaces, envelopes, env vars |
+| [Data Model](DATA_MODEL.md) | Concrete entities + schemas |
+| [Acceptance Criteria](ACCEPTANCE_CRITERIA.md) | Testable acceptance + Definition of Done |
+| [Security](SECURITY.md) · [Observability](OBSERVABILITY.md) · [Testing Strategy](TESTING_STRATEGY.md) | Quality + safety entry points |
+| [CI/CD](CI_CD.md) · [Deployment](DEPLOYMENT.md) · [Runbook](RUNBOOK.md) | Delivery + ops entry points |
+| [Risk Register](RISK_REGISTER.md) · [Roadmap](ROADMAP.md) | Risk + plan entry points |
+| [Documentation Audit](DOCUMENTATION_AUDIT.md) | Inventory + completeness scores |
+
 ## 00 · Overview
 
 - [Vision](00-overview/VISION.md) — what AgentX2.ai is and why.

@@ -16,7 +16,7 @@
 
 ---
 
-## � Documentation & Architecture
+## 📚 Documentation & Architecture
 
 This repository is an **AI-native, self-building company platform**: local Ollama models, working as
 parallel agentic swarms, take it from topic chaos to zero-regression production with full evaluation,
@@ -83,7 +83,7 @@ Design and deployment of autonomous AI agents capable of:
 - Recruiting Agents
 - Knowledge Management Agents
 
-Agentic AI systems combine planning, tool usage, memory, and autonomous task execution to achieve business outcomes with minimal human intervention. :contentReference[oaicite:0]{index=0}
+Agentic AI systems combine planning, tool usage, memory, and autonomous task execution to achieve business outcomes with minimal human intervention.
 
 ---
 
@@ -188,7 +188,7 @@ We help organizations deploy AI responsibly.
 - Data Protection
 - Audit Readiness
 
-Governance, guardrails, permissions, logging, and human oversight are foundational requirements for successful enterprise AI deployments. :contentReference[oaicite:1]{index=1}
+Governance, guardrails, permissions, logging, and human oversight are foundational requirements for successful enterprise AI deployments.
 
 ---
 

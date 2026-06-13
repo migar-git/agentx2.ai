@@ -41,6 +41,47 @@ one cheaper ([Continuous Improvement](../07-operations/CONTINUOUS_IMPROVEMENT.md
 
 <!-- newest first; append using the template block -->
 
+### LRN-20260612-04 — Documentation completion audit; required flat set added
+
+- **Timestamp (UTC):** 2026-06-12T00:00:00Z
+- **Captured by:** production-ops-brain
+- **Trigger:** review
+- **trace_id / run_id:** docs-completion-audit-2026-06-12
+- **Context:** an audit checked every Markdown file against a required flat `docs/` set for
+  autonomous build-out (PRD, ARCHITECTURE, AUTONOMOUS_BUILD_PLAN, IMPLEMENTATION_PLAN, API_CONTRACTS,
+  DATA_MODEL, ACCEPTANCE_CRITERIA, etc.).
+- **Observation (fact):** the rich numbered docs existed but the predictably-named flat entry points
+  and the build-execution specifics (ordered build sequence, task WBS, interface contracts, concrete
+  data entities, acceptance criteria) were missing.
+- **Root cause / insight:** conceptual architecture is necessary but not sufficient for autonomous
+  execution; builders need flat, predictable entry points plus concrete, testable specs.
+- **Action taken / rule added:** added 18 canonical entry-point docs (front-doors defer to the deep
+  doc; gap docs are full) + [Documentation Audit](DOCUMENTATION_AUDIT.md); preserved all existing
+  links (no restructure).
+- **Generalization:** keep one authoritative deep doc per topic and a thin, predictably-named front
+  door; never duplicate — front doors summarize + route.
+- **Confidence:** High · **Decay horizon:** 180d
+- **Supersedes:** none · **Sources:** [Documentation Audit](DOCUMENTATION_AUDIT.md) (accessed 2026-06-12)
+
+### LRN-20260612-05 — Editor replace cannot match some invalid-byte (mojibake) chars
+
+- **Timestamp (UTC):** 2026-06-12T00:00:00Z
+- **Captured by:** production-ops-brain
+- **Trigger:** review
+- **trace_id / run_id:** docs-completion-audit-2026-06-12
+- **Context:** two README emoji headers were corrupted at an earlier edit seam; both displayed as `�`.
+- **Observation (fact):** one corrupted char was a proper `U+FFFD` and matched via `\ufffd`; the other
+  was a lone invalid byte that the in-editor replace tool decodes differently and could not match,
+  even as a literal — multi-line matches also failed due to CRLF vs `\n`.
+- **Root cause / insight:** different decoders substitute invalid bytes differently; an in-editor
+  string replace cannot reliably target a byte it can't represent.
+- **Action taken / rule added:** fixed the matchable header; deferred the unmatchable one to an
+  encoding-level fix; never edit files via terminal unprompted.
+- **Generalization:** for mojibake, prefer single-line matches with the exact `U+FFFD`; if a lone
+  invalid byte won't match, escalate to an encoding-level rewrite rather than thrashing the editor.
+- **Confidence:** High · **Decay horizon:** 365d
+- **Supersedes:** none · **Sources:** this session (accessed 2026-06-12)
+
 ### LRN-20260612-03 — Foundation complete; lint pitfalls captured
 
 - **Timestamp (UTC):** 2026-06-12T00:00:00Z
