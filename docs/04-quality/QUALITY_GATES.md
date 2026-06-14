@@ -35,7 +35,8 @@ Per [`sysprompt_agentx2.md`](../../sysprompt_agentx2.md):
 | Gate | Pass criteria | Tool |
 |------|---------------|------|
 | HTML validity | no errors | html validator |
-| Accessibility | WCAG 2.2 AA, zero axe violations | axe-core ([a11y](../02-website/ACCESSIBILITY.md)) |
+| Accessibility (static) | WCAG 2.2 Level-A invariants on built HTML | `scripts/check-a11y.mjs` in `validate` ([a11y](../02-website/ACCESSIBILITY.md)) |
+| Accessibility (browser) | WCAG 2.2 AA, zero axe violations | axe-core/Lighthouse — follow-up, GAP-4 ([a11y](../02-website/ACCESSIBILITY.md)) |
 | Performance | Core Web Vitals "Good", Lighthouse ≥95 | Lighthouse ([perf](../02-website/PERFORMANCE.md)) |
 | Mobile | responsive checks pass | viewport tests |
 | Security | headers + CSP set; no secrets; deps clean | scanners ([security](../06-governance/SECURITY_ARCHITECTURE.md)) |

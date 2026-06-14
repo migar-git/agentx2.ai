@@ -44,7 +44,12 @@ On-page agents are keyboard-operable, announce state to screen readers, manage f
 
 ## 4. Verification
 
-- **Automated:** axe-core scan in [CI/CD](../04-quality/CI_CD.md) on every build (zero violations).
+- **Automated (implemented):** a zero-dependency static a11y gate, `scripts/check-a11y.mjs`, runs in
+  the `validate` step of [CI/CD](../04-quality/CI_CD.md) on every build — asserting WCAG 2.2 Level-A
+  invariants from the built HTML (one `<main>` landmark, `<img>` `alt`, accessible names on links and
+  buttons, labelled form controls, zoom not disabled, no positive `tabindex`, unique `id`s).
+- **Automated (follow-up):** browser-based axe-core + Lighthouse a11y budgets against a served build
+  remain a tracked follow-up (GAP-4 in [Gap Analysis](../reviews/gap-analysis.md)).
 - **Manual:** keyboard-only + screen-reader spot checks on key flows.
 - **Regression:** a11y score may never decrease ([Regression Policy](../04-quality/REGRESSION_POLICY.md)).
 

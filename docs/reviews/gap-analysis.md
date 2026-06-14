@@ -2,7 +2,7 @@
 title: "Gap Analysis — AgentX2.ai"
 doc_id: "REVIEW-GAP-ANALYSIS"
 status: Active
-version: 1.0.0
+version: 1.1.0
 created: 2026-06-13
 updated: 2026-06-13
 last_verified: 2026-06-13
@@ -51,7 +51,8 @@ number of real, mostly toolchain-and-supply-chain issues, now remediated.
 | Dependency security (build toolchain) | **Broken** → Implemented | See [Security Review](security-review.md) |
 | Supported Node runtime in CI/CD | **Broken** → Implemented | Node 20 was EOL; now 22 |
 | Dependency-audit CI gate | **Missing** → Implemented | New `audit:prod` step |
-| Automated a11y / performance budgets | Partial | `links-external` job is a disabled placeholder |
+| Automated a11y — static (no-browser) | **Partial** → Implemented | `scripts/check-a11y.mjs` in the `validate` gate (found+fixed a real duplicate-id defect) |
+| Automated a11y / perf budgets — browser (Lighthouse/axe) | Partial | `links-external` job is a disabled placeholder |
 | Enforced HTTP security headers in prod | Partial | `_headers` not honored by GitHub Pages |
 
 ## 4. Gap detail
@@ -85,15 +86,21 @@ number of real, mostly toolchain-and-supply-chain issues, now remediated.
   the gate meaningful (shipped code must be clean) without failing on un-fixable dev-only transitive
   advisories. See [Security Review](security-review.md) §3.
 
-### GAP-4 — Automated a11y / performance budgets (LOW) — ACCEPTED / DEFERRED
+### GAP-4 — Automated a11y / performance budgets (LOW) — PARTIALLY REMEDIATED
 
-- **Description:** the `links-external` CI job is a documented `if: false` placeholder reserved for
-  Lighthouse CI accessibility + performance budgets.
-- **Why deferred:** enabling real Lighthouse CI requires a served build and budget config; it is a
-  net-new capability rather than a fix to broken behavior, and is best added with human review. The
-  site already ships strong baseline a11y (semantic landmarks, ARIA dialog, focus management, skip
-  patterns) and is asset-light.
-- **Recommended next step:** wire `@lhci/cli` against the preview server with conservative budgets.
+- **Description:** automated accessibility enforcement was missing; the `links-external` CI job is a
+  documented `if: false` placeholder reserved for Lighthouse CI a11y + performance budgets, and the
+  a11y docs claimed an `axe-core` scan that was never wired.
+- **Remediated (this pass):** added `scripts/check-a11y.mjs` — a zero-dependency static gate (matching
+  the repo's existing `check-*.mjs` validator pattern) wired into `npm run validate` (and therefore
+  `gates` / `ci` / `release-check`). It asserts WCAG 2.2 Level-A invariants from the built HTML: one
+  `<main>` landmark, `<img>` `alt`, accessible names on links/buttons, labelled form controls, zoom not
+  disabled (1.4.4), no positive `tabindex`, and unique `id`s. On first run it caught a **real defect** —
+  `id="sg"` duplicated 24× on Mission Control (the sparkline gradient was defined per-KPI) — now fixed
+  by defining the gradient once at page scope. The a11y docs were corrected to match reality.
+- **Still deferred (browser budgets):** real Lighthouse/axe budgets need a served build + budget config
+  and Chrome in CI — a net-new capability best added with human review. **Next step:** wire `@lhci/cli`
+  against the preview server with conservative budgets.
 
 ### GAP-5 — Security headers not enforced in production (LOW) — DOCUMENTED
 
@@ -110,7 +117,8 @@ number of real, mostly toolchain-and-supply-chain issues, now remediated.
 | Decision | Why | Reversibility | Date | Owner |
 |----------|-----|---------------|------|-------|
 | Remediate GAP-1/2/3 autonomously | Real, validatable, reversible (clean tree + full gate) | High | 2026-06-13 | production-ops-brain |
-| Defer GAP-4/5 to human review | New capability / infra decision, not a code defect | High | 2026-06-13 | production-ops-brain |
+| Implement static a11y gate (GAP-4, partial) | Real, validatable, reversible; matches existing validator pattern; caught a real defect | High | 2026-06-13 | production-ops-brain |
+| Defer GAP-5 + browser a11y/perf budgets to human review | Infra decision / net-new heavy deps, not a code defect | High | 2026-06-13 | production-ops-brain |
 
 ## 6. Risks & Open Questions
 
@@ -131,6 +139,7 @@ number of real, mostly toolchain-and-supply-chain issues, now remediated.
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
 | 1.0.0 | 2026-06-13 | `production-ops-brain` | Initial gap analysis + remediation status. |
+| 1.1.0 | 2026-06-13 | `production-ops-brain` | GAP-4 partially remediated: added static a11y gate (`check-a11y.mjs`); fixed duplicate `id="sg"` on Mission Control; corrected a11y docs. |
 
 ---
 

@@ -133,6 +133,15 @@ const breakers = [
   </section>
 
   <section class="container section-sm">
+    <!-- Shared sparkline gradient: defined once, referenced by every sparkline via url(#sg). Avoids duplicate ids. -->
+    <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+      <defs>
+        <linearGradient id="sg" x1="0" y1="0" x2="120" y2="0">
+          <stop offset="0" stop-color="#6ea8fe" />
+          <stop offset="1" stop-color="#8b7bff" />
+        </linearGradient>
+      </defs>
+    </svg>
     <div class="tabs" role="tablist" aria-label="Mission Control dashboards" id="tabs">
       {TABS.map((t, i) => (
         <button class="tab" role="tab" id={`tab-${t.id}`} aria-controls={`panel-${t.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? '0' : '-1'}>
@@ -155,12 +164,6 @@ const breakers = [
               <div class="kpi-sub">{k.sub}</div>
               <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                 <polyline points={spark(k.series)} fill="none" stroke="url(#sg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <defs>
-                  <linearGradient id="sg" x1="0" y1="0" x2="120" y2="0">
-                    <stop offset="0" stop-color="#6ea8fe" />
-                    <stop offset="1" stop-color="#8b7bff" />
-                  </linearGradient>
-                </defs>
               </svg>
             </div>
           ))}

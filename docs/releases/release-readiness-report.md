@@ -2,7 +2,7 @@
 title: "Release Readiness Report — AgentX2.ai"
 doc_id: "RELEASE-READINESS"
 status: Active
-version: 1.0.0
+version: 1.1.0
 created: 2026-06-13
 updated: 2026-06-13
 last_verified: 2026-06-13
@@ -46,7 +46,8 @@ remediation. Verdict: **GO** — all blocking gates pass; remaining items are no
 | Operational runbooks exist | ✅ Pass | [`docs/07-operations/RUNBOOKS.md`](../07-operations/RUNBOOKS.md) |
 | Observability present | ✅ Pass (baseline) | `Analytics.astro` beacon; [Observability](../05-observability/OBSERVABILITY.md) |
 | Documentation complete & accurate | ✅ Pass | 119-doc tree; this audit set added |
-| Automated a11y / perf budgets | ⚠️ Deferred | Non-blocking; GAP-4 in [Gap Analysis](../reviews/gap-analysis.md) |
+| Automated a11y — static checks | ✅ Pass | `scripts/check-a11y.mjs` in `validate` (WCAG 2.2 Level-A invariants on built HTML) |
+| Automated a11y / perf budgets — browser (Lighthouse) | ⚠️ Deferred | Non-blocking; GAP-4 in [Gap Analysis](../reviews/gap-analysis.md) |
 | HTTP security headers enforced in prod | ⚠️ Deferred | Non-blocking; GAP-5 in [Gap Analysis](../reviews/gap-analysis.md) |
 
 ## 3. Changes in this release
@@ -56,6 +57,7 @@ remediation. Verdict: **GO** — all blocking gates pass; remaining items are no
 | Astro 5.18.2 → 6.4.6, sitemap → 3.7.3 | Security / dependency | Low (full gate green) | Revert `package.json` + lockfile, `npm ci` |
 | Node 20 → 22.12 (CI, deploy, engines) | Ops / EOL | Low | Revert workflow + `engines` change |
 | New `audit:prod` + `audit` scripts and CI audit gate | CI hardening | Low | Remove script + CI step |
+| New static a11y gate (`scripts/check-a11y.mjs`) + fixed duplicate `id="sg"` on Mission Control | Quality / a11y | Low (full gate green) | Remove script + `validate` step; revert page edit |
 | Added `docs/reviews/*` + this report | Documentation | None | Delete files |
 
 ## 4. Rollback strategy
@@ -66,7 +68,8 @@ stateful services, no destructive operations are involved.
 
 ## 5. Non-blocking follow-ups
 
-1. **GAP-4** — wire Lighthouse CI a11y/performance budgets against the preview server.
+1. **GAP-4 (partial)** — static a11y checks now enforced in `validate`; remaining: wire browser-based
+   Lighthouse/axe a11y + performance budgets against the preview server.
 2. **GAP-5** — front the site with a CDN that honors `_headers`, or add a `<meta>` CSP fallback.
 3. Consider Dependabot/Renovate to keep the toolchain current and feed the audit gate.
 
@@ -80,7 +83,7 @@ stateful services, no destructive operations are involved.
 
 | Risk / Question | Impact | Mitigation / Next step | Owner | Due |
 |-----------------|--------|------------------------|-------|-----|
-| Deferred a11y/perf budgets | Low | GAP-4 follow-up | production-ops-brain | Next cycle |
+| Deferred browser a11y/perf budgets | Low | GAP-4 follow-up (static a11y already enforced) | production-ops-brain | Next cycle |
 | Headers inert on Pages | Low–Med | GAP-5 follow-up | human:founder | Next cycle |
 
 ## 8. Grounding & Sources
@@ -94,6 +97,7 @@ stateful services, no destructive operations are involved.
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
 | 1.0.0 | 2026-06-13 | `production-ops-brain` | Initial release-readiness certification (GO). |
+| 1.1.0 | 2026-06-13 | `production-ops-brain` | Added static a11y gate to `validate`; fixed duplicate-id defect; verdict remains GO. |
 
 ---
 

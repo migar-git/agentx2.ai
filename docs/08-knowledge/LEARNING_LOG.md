@@ -2,10 +2,10 @@
 title: "Learning Log"
 doc_id: "KNOWLEDGE-LEARNING-LOG"
 status: Active
-version: 1.0.0
+version: 1.1.0
 created: 2026-06-12
-updated: 2026-06-12
-last_verified: 2026-06-12
+updated: 2026-06-13
+last_verified: 2026-06-13
 owner: "knowledge-swarm"
 review_cadence: 30d
 staleness_threshold: 45d
@@ -40,6 +40,26 @@ one cheaper ([Continuous Improvement](../07-operations/CONTINUOUS_IMPROVEMENT.md
 ## 3. Entries
 
 <!-- newest first; append using the template block -->
+
+### LRN-20260613-01 — Static a11y gate added; caught a real duplicate-id defect
+
+- **Timestamp (UTC):** 2026-06-13T21:54:00Z
+- **Captured by:** production-ops-brain
+- **Trigger:** review / build
+- **trace_id / run_id:** a11y-gate-build-2026-06-13
+- **Context:** the post-audit repo was healthy (all gates green) but GAP-4 (automated a11y) was a
+  deferred placeholder, and the a11y docs claimed an `axe-core` CI scan that was never wired.
+- **Observation (fact):** adding a zero-dependency static a11y validator (`scripts/check-a11y.mjs`)
+  and running it over `dist/` immediately failed one page — `id="sg"` appeared 24× on Mission Control
+  because the sparkline gradient was defined per-KPI.
+- **Root cause / insight:** "documented but unwired" automated checks let real, simple defects (invalid
+  duplicate IDs) ship silently; a cheap static gate matching the repo's existing validator pattern
+  catches them without heavy browser tooling.
+- **Action taken / rule added:** defined the gradient once at page scope; wired `check-a11y.mjs` into
+  the `validate` gate; corrected ACCESSIBILITY.md + QUALITY_GATES.md to describe the implemented static
+  checks (browser axe/Lighthouse budgets explicitly marked as the GAP-4 follow-up).
+- **Decay horizon:** 90 days (re-verify when browser a11y budgets land).
+- **Links:** [Gap Analysis](../reviews/gap-analysis.md) · [Accessibility](../02-website/ACCESSIBILITY.md) · [Quality Gates](../04-quality/QUALITY_GATES.md)
 
 ### LRN-20260612-04 — Documentation completion audit; required flat set added
 

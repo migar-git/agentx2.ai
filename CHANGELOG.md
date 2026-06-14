@@ -33,11 +33,23 @@ adheres to [Semantic Versioning 2.0.0](https://semver.org/). All dates are UTC (
 
 ### Added
 
+- **Automated accessibility gate** — `scripts/check-a11y.mjs`, a zero-dependency static checker wired
+  into `npm run validate` (and `gates` / `ci` / `release-check`). It asserts WCAG 2.2 Level-A invariants
+  on the built HTML (one `<main>` landmark, `<img>` `alt`, accessible names on links/buttons, labelled
+  form controls, zoom not disabled, no positive `tabindex`, unique `id`s). Partially closes GAP-4; see
+  [Gap Analysis](docs/reviews/gap-analysis.md).
 - **Repository audit artifacts** (2026-06-13) — [Repository Analysis](docs/reviews/repository-analysis.md),
   [Gap Analysis](docs/reviews/gap-analysis.md), [Security Review](docs/reviews/security-review.md), the
   [Master Build Plan](docs/plans/master-build-plan.md), [Rollback Plan](docs/plans/rollback-plan.md),
   the [Release Readiness Report](docs/releases/release-readiness-report.md), and
   [Release Notes](docs/releases/release-notes.md); all linked from [Docs Index](docs/INDEX.md).
+
+### Fixed
+
+- **Duplicate `id="sg"` on Mission Control** — the sparkline gradient was defined inside every KPI
+  sparkline (rendered 24× per page), producing invalid duplicate IDs and brittle SVG references. The
+  gradient is now defined once at page scope and referenced via `url(#sg)`. Caught by the new
+  accessibility gate above.
 
 ## [1.0.0] — 2026-06-12
 
