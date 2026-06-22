@@ -35,8 +35,8 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
     "@astrojs/sitemap": "^3.7.3",
-    "astro": "^6.4.6",
-    "markdownlint-cli2": "^0.18.1",
+    "astro": "^6.4.8",
+    "markdownlint-cli2": "^0.22.1",
     "typescript": "^5.7.3"
   }
 }
