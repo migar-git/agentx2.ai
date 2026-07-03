@@ -36,7 +36,7 @@
     "@astrojs/check": "^0.9.9",
     "@astrojs/sitemap": "^3.7.3",
     "astro": "^6.4.6",
-    "markdownlint-cli2": "^0.18.1",
+    "markdownlint-cli2": "^0.23.0",
     "typescript": "^6.0.3"
   }
 }
